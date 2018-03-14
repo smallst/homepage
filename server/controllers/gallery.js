@@ -1,10 +1,11 @@
 const Photo = global.model.Photo;
 let addPhoto = async (ctx, next) => {
     await next();
+    let name = ctx.request.body.key;
     await Photo.create({
-        title: 'profile',
-        url:'http://p5iu6bzgq.bkt.clouddn.com/20180117_0007.jpg',
-        tag: ['portrait']
+        title: name,
+        url:'http://p5iu6bzgq.bkt.clouddn.com/' + name,
+        tag: []
     }).then(res=>{
 
             ctx.body = {

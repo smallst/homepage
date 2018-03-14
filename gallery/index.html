@@ -43,19 +43,45 @@
              pointer-events: auto;
              cursor: pointer;
          }
+         @media screen and (min-width:1200px){
+             div.mask.show .detail{
+                 width:50vw;
+                 height: 50vh;
+                 align-items: center;
+                 flex-direction: row-reverse;
+             }
+
+             div.mask.show .detail>.info{
+                 width: 15vw;
+                 height: 50vh;
+             }
+             .img{
+                 width: 35vw;
+                 height: 50vh;
+             }
+         }
+         @media screen and (max-width:1200px){
+             div.mask.show .detail{
+                 width:80vw;
+                 height: 40vh;
+                 flex-direction: column-reverse;
+             }
+
+             div.mask.show .detail>.info{
+                 width: 80vw;
+                 height: 40vh;
+             }
+             .img{
+                 display: none;
+             }
+         }
          div.mask.show .detail{
-             width: 50vw;
-             height: 50vh;
              background-color: black;
              display: flex;
-             align-items: center;
-             flex-direction: row-reverse;
              cursor: auto;
          }
-         div.mask.show .detail>div{
+         div.mask.show .detail>.info{
              background-color: white;
-             width: 15vw;
-             height: 50vh;
          }
          .hide{
              opacity: 0;
@@ -72,6 +98,11 @@
          .prev:hover, .next:hover{
              background-color: rgba(80,80,80,0.8);
          }
+         .img{
+             display:flex;
+             justify-content:center;
+             align-items: center;
+         }
         </style>
         <script defer src="/statics/scripts/font-awesome/js/fontawesome-all.js"></script>
     </head>
@@ -79,20 +110,22 @@
         <h1>Gallery</h1>
         <div class="content">
             <div class="mask" :class="{show: maskShow}" @click="maskClose()">
-                <div class="prev" :class="{hide: detailIndex==0 }" @click="getDetail(detailIndex-1, $event)"><i class="fas fa-angle-left"></i></div>
+                <div class="prev" :class="{hide:isMobile || detailIndex==0 }" @click="getDetail(detailIndex-1, $event)"><i class="fas fa-angle-left"></i></div>
                 <div class="detail" @click="prevent($event)">
-                    <div>
+                    <div class="info">
                         <div id="exifinfo"><pre>{{exif}}</pre></div>
                         <div id="comments"></div>
                         <div id="comment"></div>
                     </div>
-                    <img id="detail-img" :src="detailUrl" alt="" />
+                    <div class="img">
+                        <img id="detail-img" :src="detailUrl" alt="" />
+                    </div>
                 </div>
-                <div class="next" :class="{hide: detailIndex==urls.length-1 }" @click="getDetail(detailIndex+1, $event)"><i class="fas fa-angle-right"></i> </div>
+                <div class="next" :class="{hide:isMobile|| detailIndex==url.length-1 }" @click="getDetail(detailIndex+1, $event)"><i class="fas fa-angle-right"></i> </div>
             </div>
             <div class="split">
                 <div class="col" v-for="i in colnum">
-                    <img :src="u + '?imageView2/2/w/' + w" v-for="(u,index) in urls" v-if="index%colnum == i-1" @click="getDetail(index)">
+                    <img :src="u + '?imageView2/2/w/' + w" v-for="(u,index) in url" v-if="index%colnum == i-1" @click="getDetail(index)">
                 </div>
                 
             </div>
@@ -100,19 +133,27 @@
         <script type="text/javascript" src="/statics/scripts/vue/vue.min.js"></script>
         <script type="text/javascript" src="/statics/scripts/axios/axios.min.js"></script>
         <script>
-         exifinfo = ['FNumber', 'ExposureTime', 'FocalLength','ISOSpeedRatings','Model'];
-         urls = [
-             'http://p5iu6bzgq.bkt.clouddn.com/20180117_0007.jpg',
-             'http://p5iu6bzgq.bkt.clouddn.com/FvaB8ZQz8mpjZxo4KCJgMgWO3Q5C',
-             'http://p5iu6bzgq.bkt.clouddn.com/FvaB8ZQz8mpjZxo4KCJgMgWO3Q5C',
-             'http://p5iu6bzgq.bkt.clouddn.com/20180117_0007.jpg',
-         ];
+         exifinfo = ['FNumber', 'ExposureTime', 'FocalLength','ISOSpeedRatings','Model',
+                     'PixelXDimension','PixelYDimension'];
+
+         urls=[];
+         axios.get('/api/getPhotoList')
+              .then(res=>{
+                  let data = res.data.content;
+
+                  for(i in data)
+                      {
+                          urls.push(data[i].url)
+                      }
+              })
+         
          cols = window.matchMedia('screen and (max-width: 1000px)').matches ? 1:2;
          width = document.body.clientWidth;
-         width = cols == 1? width: parseInt(width * 0.3);
+         width = cols == 1? parseInt(width*0.85): parseInt(width * 0.3);
          let content = new Vue({
              el: '.content',
              data: {
+                 isMobile: window.matchMedia('screen and (max-width: 1000px)').matches,
                  url: urls,
                  colnum:cols,
                  w: width,
@@ -133,19 +174,35 @@
                      getDetail:function(index, $event=null){
                          content.detailIndex = index;
                          content.maskShow = true;
-                         let url = urls[index] + '?imageView2/2/w/'+parseInt(document.body.clientWidth*0.35);
-                         console.log(url);
-                         content.detailUrl = url;
                          axios.get(urls[index]+'?exif').then(res => {
                              console.log(res.data);
+                             let imageX = res.data[exifinfo[5]].val,
+                                 imageY = res.data[exifinfo[6]].val;
+                             let screenY = content.isMobile? parseInt(document.body.clientHeight*0.3): parseInt(document.body.clientHeight*0.5),
+                                 screenX = content.isMobile? parseInt(document.body.clientWidth*0.8): parseInt(document.body.clientWidth*0.35);
+                             let url = '';
+                             console.log(imageX/screenX);
+                             console.log(imageY/screenY);
+                             if(imageX/screenX > imageY/screenY)
+                                 {
+                                     url = urls[index] + '?imageView2/2/w/'+screenX;
+                                 }
+                             else
+                                 {
+                                     url = urls[index] + '?imageView2/2/h/'+screenY;
+                                 }
+                             if(!content.isMobile)
+                                 {
+                                     content.detailUrl = url;
+                                 }
                              content.exif = `${res.data[exifinfo[0]].val}, ${res.data[exifinfo[1]].val},
 ${res.data[exifinfo[4]].val}, ${res.data[exifinfo[2]].val}, ISO ${res.data[exifinfo[3]].val}`;
-                             });
+                         });
                          if($event !== null)
                              {
                                  $event.stopPropagation();
                              }
-                         }
+                     }
                  }
          });
         </script>

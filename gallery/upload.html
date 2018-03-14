@@ -5,34 +5,44 @@
     </head>
     <body>
         <div class="upload">
-            <form method="post" action="http://upload.qiniup.com/"
-                  enctype="multipart/form-data">
-                <input name="token" type="hidden" v-model="token">
-                <input name="file" type="file" />
-                <button type='submit'>upload</button>
-            </form>
+            <input name="file" type="file" multiple="multiple" id="mf" />
+            <input type='button' value="test" @click="upload" />
         </div>
 
         <script type="text/javascript" src="/statics/scripts/vue/vue.min.js"></script>
         <script type="text/javascript" src="/statics/scripts/axios/axios.min.js"></script>
+
         <script>
+
          var up = new Vue({
              el: ".upload",
-             data: {
-                 token: '12',
-             },
              methods: {
-                 getToken: function(){
-                     axios.get("/api/getQiniuToken")
-                          .then(res => {
-                              data = res.data;
-                              up.token = data.content;
-                              console.log(up.token);
-                          });
+                 upload: function(){
+                     let files = document.getElementById("mf").files;
+                     for(let i = 0; i < files.length; i++)
+                         {
+                             axios.get("/api/getQiniuToken")
+                                  .then(res => {
+                                      console.log(res.data.content.key);
+                                      let data = new FormData();
+                                      data.append('token', res.data.content.token);
+                                      data.append('file', files[i]);
+                                      data.append('key', res.data.content.key);
+                                      axios.post("http://upload.qiniup.com/",
+                                                 data,{'Content-Type':'multipart/form-data'})
+                                           .then(res=>{
+                                               console.log(res);
+                                               axios.post('/api/addPhoto',{
+                                                   key: res.data.key
+                                               }).then(r=>{
+                                                   console.log(r);
+                                               })
+                                           })
+                                  })
+                         }
                  }
              }
          });
-         console.log(up.token)
         </script>
     </body>
 </html>
