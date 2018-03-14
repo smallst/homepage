@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <meta name="generator" content="content" charset='utf-8'/>
+        <title>upload</title>
+    </head>
+    <body>
+        <div class="upload">
+            <form method="post" action="http://upload.qiniup.com/"
+                  enctype="multipart/form-data">
+                <input name="token" type="hidden" v-model="token">
+                <input name="file" type="file" />
+                <button type='submit'>upload</button>
+            </form>
+        </div>
+
+        <script type="text/javascript" src="/statics/scripts/vue/vue.min.js"></script>
+        <script type="text/javascript" src="/statics/scripts/axios/axios.min.js"></script>
+        <script>
+         var up = new Vue({
+             el: ".upload",
+             data: {
+                 token: '12',
+             },
+             methods: {
+                 getToken: function(){
+                     axios.get("/api/getQiniuToken")
+                          .then(res => {
+                              data = res.data;
+                              up.token = data.content;
+                              console.log(up.token);
+                          });
+                 }
+             }
+         });
+         console.log(up.token)
+        </script>
+    </body>
+</html>

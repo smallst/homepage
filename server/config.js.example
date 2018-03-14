@@ -1,0 +1,4 @@
+var config = {
+    uri: "mongodb://address/dbname",
+};
+module.exports = config;

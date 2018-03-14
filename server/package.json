@@ -1,0 +1,23 @@
+{
+  "name": "homepage",
+  "version": "1.0.0",
+  "description": "homepage server",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --use-strict index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:smallst/homepage.git"
+  },
+  "author": "smallst",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.5.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-router": "^7.4.0",
+    "koa-session": "^5.8.1",
+    "mongoose": "^5.0.10",
+    "qiniu": "^7.1.3"
+  }
+}

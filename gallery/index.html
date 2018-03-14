@@ -1,0 +1,154 @@
+<html>
+    <head>
+        
+        <meta name="generator" content="content" charset="utf-8"/>
+        <meta name="viewport" content="width=device-width,initial-scal=1.0,user-scalable=no" />
+        <title>Gallery</title>
+        <link rel="stylesheet" href="/statics/style/root.css" type="text/css" media="screen" />
+        <style>
+         .split{
+             width: 62vw;
+             display: flex;
+             flex-direction: row;
+             justify-content: flex-start;
+         }
+         .col{
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+         }
+         .split img{
+             margin: 5px;
+         }
+         img.main{
+             z-index: 99;
+         }
+         div.mask{
+             position: fixed;
+             top:0;
+             left:0;
+             width: 100vw;
+             height: 100vh;
+             z-index: -50;
+             opacity: 0;
+             pointer-events: none;
+             background-color: rgba(0,0,0,0.8);
+             display: flex;
+             align-items: center;
+             justify-content: center;
+         }
+         div.mask.show{
+             z-index: 50;
+             opacity: 1;
+             pointer-events: auto;
+             cursor: pointer;
+         }
+         div.mask.show .detail{
+             width: 50vw;
+             height: 50vh;
+             background-color: black;
+             display: flex;
+             align-items: center;
+             flex-direction: row-reverse;
+             cursor: auto;
+         }
+         div.mask.show .detail>div{
+             background-color: white;
+             width: 15vw;
+             height: 50vh;
+         }
+         .hide{
+             opacity: 0;
+             pointer-events: none;
+         }
+         .prev, .next{
+             width: 1em;
+             height: 1em;
+             font-size: 4em;
+             color: grey;
+             text-align:center;
+             border-radius: 5px;
+         }
+         .prev:hover, .next:hover{
+             background-color: rgba(80,80,80,0.8);
+         }
+        </style>
+        <script defer src="/statics/scripts/font-awesome/js/fontawesome-all.js"></script>
+    </head>
+    <body>
+        <h1>Gallery</h1>
+        <div class="content">
+            <div class="mask" :class="{show: maskShow}" @click="maskClose()">
+                <div class="prev" :class="{hide: detailIndex==0 }" @click="getDetail(detailIndex-1, $event)"><i class="fas fa-angle-left"></i></div>
+                <div class="detail" @click="prevent($event)">
+                    <div>
+                        <div id="exifinfo"><pre>{{exif}}</pre></div>
+                        <div id="comments"></div>
+                        <div id="comment"></div>
+                    </div>
+                    <img id="detail-img" :src="detailUrl" alt="" />
+                </div>
+                <div class="next" :class="{hide: detailIndex==urls.length-1 }" @click="getDetail(detailIndex+1, $event)"><i class="fas fa-angle-right"></i> </div>
+            </div>
+            <div class="split">
+                <div class="col" v-for="i in colnum">
+                    <img :src="u + '?imageView2/2/w/' + w" v-for="(u,index) in urls" v-if="index%colnum == i-1" @click="getDetail(index)">
+                </div>
+                
+            </div>
+        </div>
+        <script type="text/javascript" src="/statics/scripts/vue/vue.min.js"></script>
+        <script type="text/javascript" src="/statics/scripts/axios/axios.min.js"></script>
+        <script>
+         exifinfo = ['FNumber', 'ExposureTime', 'FocalLength','ISOSpeedRatings','Model'];
+         urls = [
+             'http://p5iu6bzgq.bkt.clouddn.com/20180117_0007.jpg',
+             'http://p5iu6bzgq.bkt.clouddn.com/FvaB8ZQz8mpjZxo4KCJgMgWO3Q5C',
+             'http://p5iu6bzgq.bkt.clouddn.com/FvaB8ZQz8mpjZxo4KCJgMgWO3Q5C',
+             'http://p5iu6bzgq.bkt.clouddn.com/20180117_0007.jpg',
+         ];
+         cols = window.matchMedia('screen and (max-width: 1000px)').matches ? 1:2;
+         width = document.body.clientWidth;
+         width = cols == 1? width: parseInt(width * 0.3);
+         let content = new Vue({
+             el: '.content',
+             data: {
+                 url: urls,
+                 colnum:cols,
+                 w: width,
+                 exif: '',
+                 detailUrl: '',
+                 detailIndex: 0,
+                 maskShow : false,
+             },
+             methods:
+                 {
+                     prevent: function($event){
+                         $event.stopPropagation();
+                         $event.preventDefault();
+                     },
+                     maskClose: function(){
+                         content.maskShow = false;
+                     },
+                     getDetail:function(index, $event=null){
+                         content.detailIndex = index;
+                         content.maskShow = true;
+                         let url = urls[index] + '?imageView2/2/w/'+parseInt(document.body.clientWidth*0.35);
+                         console.log(url);
+                         content.detailUrl = url;
+                         axios.get(urls[index]+'?exif').then(res => {
+                             console.log(res.data);
+                             content.exif = `${res.data[exifinfo[0]].val}, ${res.data[exifinfo[1]].val},
+${res.data[exifinfo[4]].val}, ${res.data[exifinfo[2]].val}, ISO ${res.data[exifinfo[3]].val}`;
+                             });
+                         if($event !== null)
+                             {
+                                 $event.stopPropagation();
+                             }
+                         }
+                 }
+         });
+        </script>
+    </body>
+    
+</html>
