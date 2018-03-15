@@ -133,6 +133,15 @@
         <script type="text/javascript" src="/statics/scripts/vue/vue.min.js"></script>
         <script type="text/javascript" src="/statics/scripts/axios/axios.min.js"></script>
         <script>
+         
+         axios.post('/api/login',{user: 'smallst', pass:'123'}).then(res =>{
+             console.log('login');
+         });
+        </script>
+        <script type="text/javascript" src="/statics/scripts/ws.js"></script>
+
+        <script>
+
          exifinfo = ['FNumber', 'ExposureTime', 'FocalLength','ISOSpeedRatings','Model',
                      'PixelXDimension','PixelYDimension'];
 
@@ -146,7 +155,6 @@
                           urls.push(data[i].url)
                       }
               })
-         
          cols = window.matchMedia('screen and (max-width: 1000px)').matches ? 1:2;
          width = document.body.clientWidth;
          width = cols == 1? parseInt(width*0.85): parseInt(width * 0.3);
