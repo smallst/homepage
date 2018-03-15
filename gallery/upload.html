@@ -2,47 +2,131 @@
     <head>
         <meta name="generator" content="content" charset='utf-8'/>
         <title>upload</title>
+        <script defer src="/statics/scripts/font-awesome/js/fontawesome-all.js"></script>
+        <style>
+         .imgdiv{
+             position: relative;
+             display: inline;
+             font-size: 40px;
+         }
+         .imgdiv svg{
+             color: #98FB98;
+             position: absolute;
+             top:0;
+             right: 0;
+         }
+         #uploadbox{
+             border: 2px solid #236687;
+             border-radius: 20px;
+             width: 60vw;
+             height: 40vh;
+             position: relative;
+             cursor: pointer;
+         }
+         #uploadbox:after{
+             position:absolute;
+             width: 40px;
+             height: 40px;
+             content: "+";
+             font-size: 35px;
+             text-align: center;
+             top: 50%;
+             left: 50%;
+             margin-left: -20px;
+             margin-top: -20px;
+         }
+         .upload{
+             display:flex;
+             width: 100vw;
+             height: 100vh;
+             justify-content: center;
+             align-items:center;
+         }
+         #button{
+             width: 4em;
+             height: 2em;
+             background-color: #98fb98;
+             border-radius: 10px;
+             display: flex;
+             align-items:center;
+             justify-content: center;
+             font-weight: bold;
+             cursor: pointer;
+         }
+        </style>
     </head>
     <body>
         <div class="upload">
-            <input name="file" type="file" multiple="multiple" id="mf" />
-            <input type='button' value="test" @click="upload" />
+            <div id="uploadbox" @click="clickmulti" ></div>
+            <input name="file" type="file" multiple="multiple" id="mf" @change="preview" style="position:absolute;visibility:hidden;" />
+            <div id="button" @click="upload">upload</div>
         </div>
 
         <script type="text/javascript" src="/statics/scripts/vue/vue.min.js"></script>
         <script type="text/javascript" src="/statics/scripts/axios/axios.min.js"></script>
 
         <script>
+         window.onload = function(){
+             var up = new Vue({
+                 el: ".upload",
+                 methods: {
+                     preview:function(){
+                         let files = document.getElementById("mf").files;
+                         let uploadbox = document.getElementById("uploadbox");
+                         uploadbox.innerHTML='';
+                         for (let i = 0; i < files.length; i++) {
+                             (function(file, uploadbox){
+                                 let reader = new FileReader();
+                                 reader.onload = function(e){
+                                     console.log('read')
+                                     let imgdiv = document.createElement("div");
+                                     imgdiv.setAttribute("class","imgdiv");
+                                     let img = document.createElement("img");
+                                     img.setAttribute("width", 200);
+                                     img.setAttribute("src", e.target.result);
+                                     imgdiv.appendChild(img);
+                                     uploadbox.appendChild(imgdiv);
 
-         var up = new Vue({
-             el: ".upload",
-             methods: {
-                 upload: function(){
-                     let files = document.getElementById("mf").files;
-                     for(let i = 0; i < files.length; i++)
-                         {
-                             axios.get("/api/getQiniuToken")
-                                  .then(res => {
-                                      console.log(res.data.content.key);
-                                      let data = new FormData();
-                                      data.append('token', res.data.content.token);
-                                      data.append('file', files[i]);
-                                      data.append('key', res.data.content.key);
-                                      axios.post("http://upload.qiniup.com/",
-                                                 data,{'Content-Type':'multipart/form-data'})
-                                           .then(res=>{
-                                               console.log(res);
-                                               axios.post('/api/addPhoto',{
-                                                   key: res.data.key
-                                               }).then(r=>{
-                                                   console.log(r);
-                                               })
-                                           })
-                                  })
+                                 }
+                                 reader.readAsDataURL(file);
+                             })(files[i], uploadbox);
                          }
-                 }
+                     },
+                         clickmulti: function(){
+                             console.log('clickmulti');
+                             document.getElementById("mf").click();
+                         },
+                         upload: function(){
+                             let files = document.getElementById("mf").files;
+                             let imgdivs = document.getElementsByClassName("imgdiv");
+                             for(let i = 0; i < files.length; i++)
+                                 {
+                                     axios.get("/api/getQiniuToken")
+                                          .then(res => {
+                                              console.log(res.data.content.key);
+                                              let data = new FormData();
+                                              data.append('token', res.data.content.token);
+                                              data.append('file', files[i]);
+                                              data.append('key', res.data.content.key);
+                                              axios.post("http://upload.qiniup.com/",
+                                                         data,{'Content-Type':'multipart/form-data'})
+                                                   .then(res=>{
+                                                       console.log(res);
+                                                       axios.post('/api/addPhoto',{
+                                                           key: res.data.key
+                                                       }).then(r=>{
+                                                           let eli = document.createElement("i");
+                                                           eli.setAttribute("class","fas fa-check");
+                                                           imgdivs[i].appendChild(eli);
+                                                           console.log(r);
+                                                       })
+                                                   })
+                                          })
+                                 }
+                         }
+                     }
+                 });
              }
-         });
         </script>
     </body>
 </html>
