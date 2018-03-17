@@ -76,7 +76,7 @@
              navbar = new Vue({
                  el:".navbar",
                  data:{
-                     user: getCookie("name"),
+                     user: getCookie("username"),
                      name: '',
                      passwd: '',
                  },
@@ -90,8 +90,8 @@
                              let data = res.data.content;
                              if(res.data.code == '200')
                                  {
-                                     setCookie('name', data.user, 7);
-                                     setCookie('id', data._id, 7);
+                                     setCookie('username', data.user, 7);
+                                     setCookie('userid', data._id, 7);
                                      navbar.user = data.user;
                                      ws = startWS();
                                  }

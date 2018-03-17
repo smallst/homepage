@@ -1,9 +1,8 @@
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-    var expires = "expires="+d.toUTCString();
+    var expires = "expires="+d.toGMTString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    return cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
 function getCookie(cname) {
@@ -25,12 +24,12 @@ var ws;
 // if(getCookie("name")!== '' )
 // {
 axios.get("/api/checkLogin").then(res => {
-    console.log("checklogin"+JSON.stringify(res.data));
-        let data = res.data.content;
+    let data = res.data.content;
+    console.log(res.data.code == 200);
         if(res.data.code == 200)
         {
-            setCookie('name', data.user, 7);
-            setCookie('id', data._id, 7);
+            setCookie('username', data.user, 7);
+            setCookie('userid', data._id, 7);
             ws = startWS();
         }
     });
