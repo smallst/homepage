@@ -1,0 +1,9 @@
+--- ws.js	2018-03-17 19:32:21.851771451 +0800
++++ ws-server.js	2018-03-17 22:37:47.234572217 +0800
+@@ -1,5 +1,5 @@
+ function startWS(){
+-    let ws = new WebSocket('ws://localhost/ws/comment');
++    let ws = new WebSocket('wss://smallst.me/ws/comment');
+     let timerID = -1;
+     timerID = setInterval(keepAlive, 30000);
+     ws.onmessage = function(event){
