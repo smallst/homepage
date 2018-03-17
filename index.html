@@ -4,9 +4,55 @@
         <meta name="viewport" content="width=device-width,initial-scal=1.0,user-scalable=no" />
         <title>homepage of smallst</title>
         <link rel="stylesheet" href="/statics/style/root.css" type="text/css" media="screen" />
+        <style>
+         .bottom{
+             position:fixed;
+             left:0;
+             right: 0;
+             margin-left: auto;
+             margin-right: auto;
+             bottom: 2em;
+             width: 80%;
+             text-align: center;
+             color: #999999;
+             font-size: 0.9em;
+         }
+         .login{
+             display: none;
+         }
+         .login.anonymous{
+             position: fixed;
+             left: 0;
+             right:0;
+             top: 0;
+             bottom: 0;
+             margin: auto;
+             /* border: 2px solid var(--blue); */
+             background-color: var(--pink);
+             border-radius: 5px;
+             box-shadow: 2px 2px 1px grey;
+             display: flex;
+             flex-direction: column;
+             width: 16em;
+             height: 14em;
+             cursor: pointer;
+         }
+         
+        </style>
     </head>
     <body>
-        <h1>欢迎来到 smallst.me</h1>
+        <div class="header">
+            <div class="navbar">
+                <h1>欢迎来到 smallst.me</h1>
+                <div class="user" >{{user?user:'sign in'}}</div>
+                <div class="login" :class="{anonymous: !user}">
+                    <input type="text" name="user" value="" v-model="name" placeholder="username" />
+                    <input type="password" name="passwd" value="" v-model="passwd" placeholder="passwd" />
+                    <input name="" type="button" value="登录" @click="login" />
+                </div>
+            </div>
+            <hr class="mysplit-color"/>
+        </div>
         <div class="content">
             <p>这里可能有：</p>
             <ul>
@@ -17,5 +63,43 @@
                 <li>其他...</li>
             </ul>
         </div>
+        <div class="bottom">
+            这个网站使用 <a href="https://vuejs.org/">Vue.js</a> 与 <a href="https://github.com/axios/axios">axios</a> 构建，使用了 <a href="https://fontawesome.com/">Font Awesome</a>，其他皆为手撸。后端采用 <a href="https://nodejs.org/en/">nodejs</a> 配合<a href="https://www.mongodb.com/">MongoDb</a> 搭建，欢迎到 <a href="https://github.com/smallst/homepage/issues">Github</a> 提交 bug ，以帮助该网站越做越好。<br>注册仅提供评论功能，请自行选择。
+        </div>
+        <script type="text/javascript" src="/statics/scripts/vue/vue.min.js"></script>
+        <script type="text/javascript" src="/statics/scripts/axios/axios.min.js"></script>
+        <script type="text/javascript" src="/statics/scripts/ws.js"></script>
+        <script type="text/javascript" src="/statics/scripts/root.js"></script>
+
+        <script>
+         /* window.onload = function(){*/
+             navbar = new Vue({
+                 el:".navbar",
+                 data:{
+                     user: getCookie("name"),
+                     name: '',
+                     passwd: '',
+                 },
+                 methods:{
+                     login:function(){
+                         console.log('login');
+                         axios.post('/api/login', {
+                             user: navbar.name,
+                             pass: navbar.passwd
+                         }).then(res => {
+                             let data = res.data.content;
+                             if(res.data.code == '200')
+                                 {
+                                     setCookie('name', data.user, 7);
+                                     setCookie('id', data._id, 7);
+                                     navbar.user = data.user;
+                                     ws = startWS();
+                                 }
+                         });
+                     }
+                 }
+             })
+         /* }*/
+        </script>
     </body>
 </html>

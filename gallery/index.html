@@ -125,21 +125,43 @@
             </div>
             <div class="split">
                 <div class="col" v-for="i in colnum">
-                    <img :src="u + '?imageView2/2/w/' + w" v-for="(u,index) in url" v-if="index%colnum == i-1" @click="getDetail(index)">
+                    <img class="listimg" :src="u + '?imageView2/2/w/' + w" v-for="(u,index) in url" v-if="index%colnum == i-1" @click="getDetail(index)">
                 </div>
-                
             </div>
         </div>
         <script type="text/javascript" src="/statics/scripts/vue/vue.min.js"></script>
         <script type="text/javascript" src="/statics/scripts/axios/axios.min.js"></script>
         <script>
-         
-         axios.post('/api/login',{user: 'smallst', pass:'123'}).then(res =>{
-             console.log('login');
-         });
+         /* axios.post('/api/login',{user: 'smallst', pass:'123'}).then(res =>{*/
+         /* console.log('login');*/
+         /* console.log(res);*/
+         /* });*/
         </script>
         <script type="text/javascript" src="/statics/scripts/ws.js"></script>
-
+        <script>
+         let loadingData = false;
+         document.addEventListener('scroll', function (event) {
+             if (document.body.scrollTop  >= 0.9*(document.body.scrollHeight - window.innerHeight)) {
+                 if(!loadingData)
+                     {
+                         let imgNum = document.getElementsByClassName("listimg").length;
+                         loadingData = true;
+                         axios.get('/api/getPhotoList?more='+imgNum).then(res =>{
+                             console.log(res)
+                             let data = res.data.content;
+                             if(data.length >0)
+                                 {
+                                     for(i in data)
+                                         {
+                                             urls.push(data[i].url)
+                                         }
+                                     loadingData =false;
+                                 }
+                         });
+                     }
+             }
+         });
+        </script>
         <script>
 
          exifinfo = ['FNumber', 'ExposureTime', 'FocalLength','ISOSpeedRatings','Model',

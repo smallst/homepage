@@ -10,9 +10,10 @@ app.keys=['homepage'];
 global.model = require('./model');
 app.use(body({
     multipart:true,
-    formidable: {
-        maxFileSize: 1000000000,
-    }}));
+    // formidable: {
+    //     maxFileSize: 1000000000,
+    // }
+            }));
 const controller = require('./controller');
 app.use(controller());
 
