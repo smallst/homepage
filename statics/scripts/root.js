@@ -20,17 +20,50 @@ function getCookie(cname) {
     return "";
 }
 
-var ws;
+var ws, navbar;
 // if(getCookie("name")!== '' )
 // {
-axios.get("/api/checkLogin").then(res => {
-    let data = res.data.content;
-    console.log(res.data.code == 200);
+window.onload = function(){
+    axios.get("/api/checkLogin").then(res => {
+        let data = res.data.content;
+        console.log(data);
         if(res.data.code == 200)
         {
             setCookie('username', data.user, 7);
             setCookie('userid', data._id, 7);
             ws = startWS();
         }
+        else{
+            
+        }
     });
-// }
+    // }
+
+    navbar = new Vue({
+        el:".navbar",
+        data:{
+            user:getCookie("username"),
+            name: '',
+            passwd: '',
+             },
+        methods:{
+            login:function(){
+                console.log('login');
+                axios.post('/api/login', {
+                    user: navbar.name,
+                    pass: navbar.passwd
+                }).then(res => {
+                    let data = res.data.content;
+                    if(res.data.code == '200')
+                    {
+                        setCookie('username', data.user, 7);
+                        setCookie('userid', data._id, 7);
+                        navbar.user = data.user;
+                        ws = startWS();
+                    }
+                });
+            }
+        }
+    });
+
+}

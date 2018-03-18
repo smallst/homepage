@@ -45,6 +45,29 @@ hr.mysplit-color {
     flex-direction: column-reverse;
     cursor: pointer;
 }
+.login{
+    display: none;
+}
+.login.anonymous{
+    position: fixed;
+    left: 0;
+    right:0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    /* border: 2px solid var(--blue); */
+    background-color: var(--pink);
+    border-radius: 5px;
+    box-shadow: 2px 2px 1px grey;
+    display: flex;
+    flex-direction: column;
+    width: 16em;
+    height: 14em;
+    cursor: pointer;
+}
+
+
+
 
 input[type="text"], input[type='password']{
     outline: none;
@@ -52,19 +75,21 @@ input[type="text"], input[type='password']{
     padding: 0.5em;
     height: 2em;
     border-radius: 10px;
-    background-color: var(--foreground-color);
-    border: none;
+    border: 1px solid var(--foreground-color);
+}
+.login > input{
     font-size: 2em;
+    background-color: var(--foreground-color);
+}
+.login > input[type='button']{
+    letter-spacing: 1em;
+    text-indent: 1em;
 }
 input[type="button"]{
     outline: none;
     height: 2em;
-    font-size: 2em;
-    background-color: var(--foreground-color);
     border-radius: 1em;
     border:none;
     text-align: center;
     color: var(--main-color);
-    letter-spacing: 1em;
-    text-indent: 1em;
 }

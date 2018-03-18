@@ -82,6 +82,8 @@
          }
          div.mask.show .detail>.info{
              background-color: white;
+                 display: flex;
+                 flex-direction:column;
          }
          .hide{
              opacity: 0;
@@ -103,25 +105,72 @@
              justify-content:center;
              align-items: center;
          }
+         #comment{
+             display:flex;
+             flex-direction: row;
+         }
+         #comments{
+             flex-grow: 2;
+             overflow-y: auto;
+         }
+         .rootComment, .replies{
+             display: flex;
+             justify-content: space-between;
+         }
+         .replies{
+             padding-left:1.4em;
+             padding-right: 0.4em;
+         }
+         .reply-icon{
+             cursor: pointer;
+         }
         </style>
         <script defer src="/statics/scripts/font-awesome/js/fontawesome-all.js"></script>
     </head>
     <body>
-        <h1>Gallery</h1>
+        <div class="header">
+            <div class="navbar">
+                <h1>Gallery</h1>
+                <div class="user" >{{user?user:'sign in'}}</div>
+                <div class="login" :class="{anonymous: !user}">
+                    <input type="text" name="user" value="" v-model="name" placeholder="username" />
+                    <input type="password" name="passwd" value="" v-model="passwd" placeholder="passwd" />
+                    <input name="" type="button" value="登录" @click="login" />
+                </div>
+            </div>
+            <hr class="mysplit-color"/>
+        </div>
+        
         <div class="content">
+            <p>希望有朝一日这里的图片都有自己的风格</p>
             <div class="mask" :class="{show: maskShow}" @click="maskClose()">
-                <div class="prev" :class="{hide:isMobile || detailIndex==0 }" @click="getDetail(detailIndex-1, $event)"><i class="fas fa-angle-left"></i></div>
+                <div class="prev" :class="{hide:isMobile || detail.index==0 }" @click="getDetail(detail.index-1, $event)"><i class="fas fa-angle-left"></i></div>
                 <div class="detail" @click="prevent($event)">
                     <div class="info">
-                        <div id="exifinfo"><pre>{{exif}}</pre></div>
-                        <div id="comments"></div>
-                        <div id="comment"></div>
+                        <div id="exifinfo"><pre>{{detail.exif}}</pre></div>
+                        <div id="comments">
+                            <hr class="mysplit-color"/>
+                            <div class="comment" v-for="(root, key) in detail.comments">
+                                <div class="rootComment" v-if="root">
+                                    {{root.value}}
+                                    <div class="reply-icon" @click="reply(key, key)"><i class="fas fa-reply"></i></div>
+                                </div>
+                                <div class="replies" v-if="root" v-for="(rep, rid) in root.replies">
+                                    {{rep.value}}
+                                    <div class="reply-icon" @click="reply(rid, key)"><i class="fas fa-reply"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="comment">
+                            <input type="text" id="comment-content" :disabled="!userId" name="" :style="{width:(isMobile?73:12)+'vw'}" v-model="detail.comment" autofocus="autofocus" />
+                            <input name="" type="button" style="padding: 0 1em;flex-shrink: 0;" value="发送" @click="addComment(detail.index)" />
+                        </div>
                     </div>
                     <div class="img">
-                        <img id="detail-img" :src="detailUrl" alt="" />
+                        <img id="detail-img" :src="detail.url" alt="" />
                     </div>
                 </div>
-                <div class="next" :class="{hide:isMobile|| detailIndex==url.length-1 }" @click="getDetail(detailIndex+1, $event)"><i class="fas fa-angle-right"></i> </div>
+                <div class="next" :class="{hide:isMobile|| detail.index==url.length-1 }" @click="getDetail(detail.index+1, $event)"><i class="fas fa-angle-right"></i> </div>
             </div>
             <div class="split">
                 <div class="col" v-for="i in colnum">
@@ -129,15 +178,10 @@
                 </div>
             </div>
         </div>
-        <script type="text/javascript" src="/statics/scripts/vue/vue.min.js"></script>
+        <script type="text/javascript" src="/statics/scripts/vue/vue.js"></script>
         <script type="text/javascript" src="/statics/scripts/axios/axios.min.js"></script>
-        <script>
-         /* axios.post('/api/login',{user: 'smallst', pass:'123'}).then(res =>{*/
-         /* console.log('login');*/
-         /* console.log(res);*/
-         /* });*/
-        </script>
         <script type="text/javascript" src="/statics/scripts/ws.js"></script>
+        <script type="text/javascript" src="/statics/scripts/root.js"></script>
         <script>
          let loadingData = false;
          document.addEventListener('scroll', function (event) {
@@ -167,14 +211,15 @@
          exifinfo = ['FNumber', 'ExposureTime', 'FocalLength','ISOSpeedRatings','Model',
                      'PixelXDimension','PixelYDimension'];
 
-         urls=[];
+         var urls=[]; var photoIds = [];
          axios.get('/api/getPhotoList')
               .then(res=>{
                   let data = res.data.content;
 
                   for(i in data)
                       {
-                          urls.push(data[i].url)
+                          urls.push(data[i].url);
+                          photoIds.push(data[i]._id);
                       }
               })
          cols = window.matchMedia('screen and (max-width: 1000px)').matches ? 1:2;
@@ -183,13 +228,21 @@
          let content = new Vue({
              el: '.content',
              data: {
+                 userId: getCookie('userid'),
                  isMobile: window.matchMedia('screen and (max-width: 1000px)').matches,
                  url: urls,
                  colnum:cols,
                  w: width,
-                 exif: '',
-                 detailUrl: '',
-                 detailIndex: 0,
+                 detail:{
+                     exif: '',
+                     url: '',
+                     index: -1,
+                     id: '',
+                     comment: '',
+                     comments: {},
+                     fatherId: '0',
+                     rootId: '',
+                 },
                  maskShow : false,
              },
              methods:
@@ -201,9 +254,61 @@
                      maskClose: function(){
                          content.maskShow = false;
                      },
+                     reply: function(rid, rootId){
+                         content.detail.fatherId = rid;
+                         content.detail.rootId = rootId;
+                         let cc = document.getElementById("comment-content");
+                         cc.setAttribute("placeholder", "reply:");
+                         cc.focus();
+                     },
+                     addComment: function(index){
+                         axios.post('/api/addComment',{
+                             type: 'gallery',
+                             content: content.detail.comment,
+                             id: photoIds[index],
+                             fatherId: content.detail.fatherId,
+                             rootId: content.detail.rootId,
+                             userId: content.userId
+                         }).then(res => {
+                             
+                             if(res.data.code != 200)
+                                 {
+                                     console.log('err add comment');
+                                 }
+                             else
+                                 {
+                                     let data = res.data.content;
+                                     console.log(data)
+                                     if(content.detail.fatherId!='0'){
+                                         content.detail.comments[data.rootId].replies[data._id]={
+                                             value: data.content,
+                                             replyUser: data.fatherId
+                                         }
+                                     }
+                                     else{
+                                         content.detail.comments[data._id] = {
+                                             value: data.content,
+                                             replies: {}
+                                         }
+                                     }
+                                     content.detail.comment = '';
+                                     content.detail.fatherId = '0';
+                                     content.detail.rootId = '';
+                                 }
+                         });
+                     },
                      getDetail:function(index, $event=null){
-                         content.detailIndex = index;
+                         content.detail.index = index;
                          content.maskShow = true;
+                         axios.get('/api/getComment',{
+                             params:{
+                                 type: 'gallery',
+                                 id: photoIds[index]
+                             }
+                         }).then(res => {
+                             console.log(res.data);
+                             content.detail.comments = res.data.content;
+                         });
                          axios.get(urls[index]+'?exif').then(res => {
                              console.log(res.data);
                              let imageX = res.data[exifinfo[5]].val,
@@ -223,9 +328,9 @@
                                  }
                              if(!content.isMobile)
                                  {
-                                     content.detailUrl = url;
+                                     content.detail.url = url;
                                  }
-                             content.exif = `${res.data[exifinfo[0]].val}, ${res.data[exifinfo[1]].val},
+                             content.detail.exif = `${res.data[exifinfo[0]].val}, ${res.data[exifinfo[1]].val},
 ${res.data[exifinfo[4]].val}, ${res.data[exifinfo[2]].val}, ISO ${res.data[exifinfo[3]].val}`;
                          });
                          if($event !== null)
