@@ -87,7 +87,7 @@ let register = async (ctx, next) => {
 };
 let getLikes = async (ctx, next) => {
     await next();
-    console.log(ctx.cookies);
+    // console.log(ctx.cookies);
     let id = ctx.cookies.get('id');
     console.log(id);
     await User.findOne({_id:id},{likes:1}).exec()
@@ -98,9 +98,22 @@ let getLikes = async (ctx, next) => {
             };
         });
 };
+let Likes = async(ctx, next) =>{
+    await next();
+    let id = ctx.cookies.get('id');
+    let likesId = ctx.request.body.id;
+    await User.update({_id: id},{$push: {likes: likesId}}).exec()
+        .then(res => {
+            ctx.body = {
+                code: 200,
+                content: res
+            };
+        });
+};
 
 module.exports = {
     "POST /login": login,
+    "POST /likes": Likes,
     "GET /getLikes": getLikes,
     "POST /register": register,
     "GET /checkRegister" : checkRegister,

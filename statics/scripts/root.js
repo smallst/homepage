@@ -34,7 +34,8 @@ window.onload = function(){
             ws = startWS();
         }
         else{
-            
+            setCookie('username', '', 7);
+            setCookie('userid', '', 7);
         }
     });
     // }

@@ -82,8 +82,8 @@
          }
          div.mask.show .detail>.info{
              background-color: white;
-                 display: flex;
-                 flex-direction:column;
+             display: flex;
+             flex-direction:column;
          }
          .hide{
              opacity: 0;
@@ -124,6 +124,16 @@
          .reply-icon{
              cursor: pointer;
          }
+         #likes{
+             cursor: pointer;
+             position: absolute;
+             font-size: 2em;
+             top: 0.2em;
+             right: 0.2em;
+         }
+         #exifinfo{
+             position: relative;
+         }
         </style>
         <script defer src="/statics/scripts/font-awesome/js/fontawesome-all.js"></script>
     </head>
@@ -147,7 +157,15 @@
                 <div class="prev" :class="{hide:isMobile || detail.index==0 }" @click="getDetail(detail.index-1, $event)"><i class="fas fa-angle-left"></i></div>
                 <div class="detail" @click="prevent($event)">
                     <div class="info">
-                        <div id="exifinfo"><pre>{{detail.exif}}</pre></div>
+                        <div id="exifinfo">
+                            <pre>{{detail.exif}}</pre>
+                            <div id="likes" @click="likes(detail.id)">
+                                <div :style="{color:userLikes.indexOf(detail.id)>-1?'red':''}">
+                                    &#9825;
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div id="comments">
                             <hr class="mysplit-color"/>
                             <div class="comment" v-for="(root, key) in detail.comments">
@@ -211,7 +229,7 @@
          exifinfo = ['FNumber', 'ExposureTime', 'FocalLength','ISOSpeedRatings','Model',
                      'PixelXDimension','PixelYDimension'];
 
-         var urls=[]; var photoIds = [];
+         var urls=[]; var photoIds = []; var userLikes = [];
          axios.get('/api/getPhotoList')
               .then(res=>{
                   let data = res.data.content;
@@ -221,18 +239,30 @@
                           urls.push(data[i].url);
                           photoIds.push(data[i]._id);
                       }
-              })
+              });
+         axios.get('/api/getLikes',{
+             params: {
+                 id: getCookie('userid')
+             }
+         }).then(res => {
+             console.log('getlikes');
+             if(res.data.code == 200)
+                 {
+                     content.userLikes = res.data.content.likes;
+                 }
+         });
          cols = window.matchMedia('screen and (max-width: 1000px)').matches ? 1:2;
          width = document.body.clientWidth;
          width = cols == 1? parseInt(width*0.85): parseInt(width * 0.3);
-         let content = new Vue({
+         var content = new Vue({
              el: '.content',
-             data: {
+             data:{
                  userId: getCookie('userid'),
                  isMobile: window.matchMedia('screen and (max-width: 1000px)').matches,
                  url: urls,
                  colnum:cols,
                  w: width,
+                 userLikes: userLikes,
                  detail:{
                      exif: '',
                      url: '',
@@ -254,6 +284,17 @@
                      maskClose: function(){
                          content.maskShow = false;
                      },
+                     likes: function(id) {
+                         axios.post("/api/likes",{
+                             id: id
+                         }).then(res => {
+                             console.log(res.data.content);
+                             if(res.data.code == 200)
+                                 {
+                                     content.userLikes.push(id);
+                                 }
+                         })
+                     },
                      reply: function(rid, rootId){
                          content.detail.fatherId = rid;
                          content.detail.rootId = rootId;
@@ -263,6 +304,7 @@
                      },
                      addComment: function(index){
                          axios.post('/api/addComment',{
+                             /* userLikes: [],*/
                              type: 'gallery',
                              content: content.detail.comment,
                              id: photoIds[index],
@@ -297,8 +339,11 @@
                                  }
                          });
                      },
+                     
                      getDetail:function(index, $event=null){
                          content.detail.index = index;
+                         content.detail.id = photoIds[index];
+
                          content.maskShow = true;
                          axios.get('/api/getComment',{
                              params:{
