@@ -62,7 +62,7 @@
             </div>
             <div class="split">
                 <div class="col" v-for="i in colnum">
-                    <img class="listimg" :src="u + '?imageView2/2/w/' + w" v-for="(u,index) in url" v-if="index%colnum == i-1" @click="getDetail(index)">
+                    <img class="listimg" :src="u.split(/^https/,'http') + '?imageView2/2/w/' + w" v-for="(u,index) in url" v-if="index%colnum == i-1" @click="getDetail(index)">
                 </div>
             </div>
         </div>
