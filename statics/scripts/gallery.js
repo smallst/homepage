@@ -12,13 +12,14 @@ document.addEventListener('scroll', function (event) {
             let imgNum = document.getElementsByClassName("listimg").length;
             loadingData = true;
             axios.get('/api/getPhotoList?more='+imgNum).then(res =>{
-                console.log(res)
+                console.log(res);
                 let data = res.data.content;
                 if(data.length >0)
                 {
                     for(i in data)
                     {
                         urls.push(data[i].url);
+                        photoIds.push(data[i]._id);
                     }
                     loadingData =false;
                 }
@@ -114,7 +115,7 @@ var content = new Vue({
                 else
                 {
                     let data = res.data.content;
-                    console.log(data)
+                    console.log(data);
                     if(content.detail.fatherId!='0'){
                         content.detail.comments[data.rootId].replies[data._id]={
                             value: data.content,
@@ -150,7 +151,7 @@ var content = new Vue({
             });
             axios.get('/api/getExif?id='+content.detail.id).then(res => {
                 let exif = res.data.content;
-                let imageX = exif[exifinfo[5]],
+                let imageX = +exif[exifinfo[5]],
                     imageY = exif[exifinfo[6]];
                 let screenY = content.isMobile? parseInt(document.body.clientHeight*0.3): parseInt(document.body.clientHeight*0.5),
                     screenX = content.isMobile? parseInt(document.body.clientWidth*0.8): parseInt(document.body.clientWidth*0.35);
