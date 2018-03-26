@@ -2,12 +2,15 @@ const Koa = require('koa');
 const session = require('koa-session');
 // const bodyParser = require('koa-bodyparser');
 const body = require('koa-body');
+
+const request= require("koa-http-request");
 const app = new Koa();
 app.keys=['homepage'];
 
 // let sessionConfig = require('./session');
 // app.use(session(sessionConfig, app));
 global.model = require('./model');
+app.use(request());
 app.use(body({
     multipart:true,
     // formidable: {

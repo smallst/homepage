@@ -1,9 +1,9 @@
 let loadingData = false;
-let exifinfo = ['FNumber', 'ExposureTime', 'FocalLength','ISOSpeedRatings','Model',
-                'PixelXDimension','PixelYDimension'];
 let cols = window.matchMedia('screen and (max-width: 1000px)').matches ? 1:2;
 let width = document.body.clientWidth;
 width = cols == 1? parseInt(width*0.85): parseInt(width * 0.3);
+let exifinfo = ['FNumber', 'ExposureTime', 'FocalLength','ISOSpeedRatings','Model',
+                'PixelXDimension','PixelYDimension'];
 
 document.addEventListener('scroll', function (event) {
     if (document.body.scrollTop  >= 0.9*(document.body.scrollHeight - window.innerHeight)) {
@@ -34,7 +34,7 @@ axios.get('/api/getPhotoList')
 
         for(i in data)
         {
-            urls.push(data[i].url.replace(/^http/,'https'));
+            urls.push(data[i].url);
             photoIds.push(data[i]._id);
         }
     });
@@ -148,10 +148,10 @@ var content = new Vue({
                 console.log(res.data);
                 content.detail.comments = res.data.content;
             });
-            axios.get((urls[index]+'?exif')).then(res => {
-                console.log(res.data);
-                let imageX = res.data[exifinfo[5]].val,
-                    imageY = res.data[exifinfo[6]].val;
+            axios.get('/api/getExif?id='+content.detail.id).then(res => {
+                let exif = res.data.content;
+                let imageX = exif[exifinfo[5]],
+                    imageY = exif[exifinfo[6]];
                 let screenY = content.isMobile? parseInt(document.body.clientHeight*0.3): parseInt(document.body.clientHeight*0.5),
                     screenX = content.isMobile? parseInt(document.body.clientWidth*0.8): parseInt(document.body.clientWidth*0.35);
                 let url = '';
@@ -169,8 +169,9 @@ var content = new Vue({
                 {
                     content.detail.url = url;
                 }
-                content.detail.exif = `${res.data[exifinfo[0]].val}, ${res.data[exifinfo[1]].val},
-${res.data[exifinfo[4]].val}, ${res.data[exifinfo[2]].val}, ISO ${res.data[exifinfo[3]].val}`;
+                content.detail.exif = `${exif[exifinfo[0]]}, ${exif[exifinfo[1]]},
+-${exif[exifinfo[4]]}, ${exif[exifinfo[2]]}, ISO ${exif[exifinfo[3]]}`;
+
             });
             if($event !== null)
             {

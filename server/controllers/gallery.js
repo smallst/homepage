@@ -1,4 +1,41 @@
 const Photo = global.model.Photo;
+let getExif =async (ctx, next) => {
+    await next();
+    let id = ctx.request.query.id;
+    console.log(id);
+    let res = await Photo.findOne({
+        _id: id
+    }).then(res =>{
+        return res;
+    });
+    console.log(res);
+    if(res.exif == null || Object.keys(res.exif).length == 0)
+    {
+        let repo = await ctx.get(res.url + '?exif');
+        let exifinfo = ['FNumber', 'ExposureTime', 'FocalLength','ISOSpeedRatings','Model',
+                        'PixelXDimension','PixelYDimension'];
+        repo = JSON.parse(repo);
+        let exif = {};
+        for(let key in repo)
+        {
+            if(exifinfo.indexOf(key) != -1)
+            {
+                exif[key] = repo[key].val;
+            }
+        }
+        await Photo.update({_id:id},{$set: {exif: exif}}).exec();
+        ctx.body = {
+            code: 200,
+            content: exif
+        };
+    }
+    else{
+        ctx.body = {
+            code: 200,
+            content: res.exif
+        };
+    }
+};
 let addPhoto = async (ctx, next) => {
     await next();
     let name = ctx.request.body.key;
@@ -54,7 +91,7 @@ let getPhotoList = async (ctx, next) => {
     else
     {
         more = +more;
-         if(cTag !== undefined)
+        if(cTag !== undefined)
         {
             await Photo.find({
                 type:cTag
@@ -87,6 +124,7 @@ let getPhotoList = async (ctx, next) => {
 };
 
 module.exports = {
+    "GET /getExif" : getExif,
     "POST /addPhoto"  : addPhoto,
     "GET /getPhotoList" :  getPhotoList,
 };
