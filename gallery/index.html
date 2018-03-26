@@ -1,140 +1,10 @@
 <html>
     <head>
-        
         <meta name="generator" content="content" charset="utf-8"/>
         <meta name="viewport" content="width=device-width,initial-scal=1.0,user-scalable=no" />
         <title>Gallery</title>
         <link rel="stylesheet" href="/statics/style/root.css" type="text/css" media="screen" />
-        <style>
-         .split{
-             width: 62vw;
-             display: flex;
-             flex-direction: row;
-             justify-content: flex-start;
-         }
-         .col{
-             display: flex;
-             flex-direction: column;
-             align-items: center;
-         }
-         .split img{
-             margin: 5px;
-         }
-         img.main{
-             z-index: 99;
-         }
-         div.mask{
-             position: fixed;
-             top:0;
-             left:0;
-             width: 100vw;
-             height: 100vh;
-             z-index: -50;
-             opacity: 0;
-             pointer-events: none;
-             background-color: rgba(0,0,0,0.8);
-             display: flex;
-             align-items: center;
-             justify-content: center;
-         }
-         div.mask.show{
-             z-index: 50;
-             opacity: 1;
-             pointer-events: auto;
-             cursor: pointer;
-         }
-         @media screen and (min-width:1200px){
-             div.mask.show .detail{
-                 width:50vw;
-                 height: 50vh;
-                 align-items: center;
-                 flex-direction: row-reverse;
-             }
-
-             div.mask.show .detail>.info{
-                 width: 15vw;
-                 height: 50vh;
-             }
-             .img{
-                 width: 35vw;
-                 height: 50vh;
-             }
-         }
-         @media screen and (max-width:1200px){
-             div.mask.show .detail{
-                 width:80vw;
-                 height: 40vh;
-                 flex-direction: column-reverse;
-             }
-
-             div.mask.show .detail>.info{
-                 width: 80vw;
-                 height: 40vh;
-             }
-             .img{
-                 display: none;
-             }
-         }
-         div.mask.show .detail{
-             background-color: black;
-             display: flex;
-             cursor: auto;
-         }
-         div.mask.show .detail>.info{
-             background-color: white;
-             display: flex;
-             flex-direction:column;
-         }
-         .hide{
-             opacity: 0;
-             pointer-events: none;
-         }
-         .prev, .next{
-             width: 1em;
-             height: 1em;
-             font-size: 4em;
-             color: grey;
-             text-align:center;
-             border-radius: 5px;
-         }
-         .prev:hover, .next:hover{
-             background-color: rgba(80,80,80,0.8);
-         }
-         .img{
-             display:flex;
-             justify-content:center;
-             align-items: center;
-         }
-         #comment{
-             display:flex;
-             flex-direction: row;
-         }
-         #comments{
-             flex-grow: 2;
-             overflow-y: auto;
-         }
-         .rootComment, .replies{
-             display: flex;
-             justify-content: space-between;
-         }
-         .replies{
-             padding-left:1.4em;
-             padding-right: 0.4em;
-         }
-         .reply-icon{
-             cursor: pointer;
-         }
-         #likes{
-             cursor: pointer;
-             position: absolute;
-             font-size: 2em;
-             top: 0.2em;
-             right: 0.2em;
-         }
-         #exifinfo{
-             position: relative;
-         }
-        </style>
+        <link rel="stylesheet" href="/statics/style/gallery.css" type="text/css" media="screen" />
         <script defer src="/statics/scripts/font-awesome/js/fontawesome-all.js"></script>
     </head>
     <body>
@@ -142,7 +12,7 @@
             <div class="navbar">
                 <h1>Gallery</h1>
                 <div class="user" >{{user?user:'sign in'}}</div>
-                <div class="login" :class="{anonymous: !user}">
+                <div class="login" :class="{anonymous: signin}">
                     <input type="text" name="user" value="" v-model="name" placeholder="username" />
                     <input type="password" name="passwd" value="" v-model="passwd" placeholder="passwd" />
                     <input name="" type="button" value="登录" @click="login" />
@@ -150,7 +20,7 @@
             </div>
             <hr class="mysplit-color"/>
         </div>
-        
+
         <div class="content">
             <p>希望有朝一日这里的图片都有自己的风格</p>
             <div class="mask" :class="{show: maskShow}" @click="maskClose()">
@@ -162,10 +32,10 @@
                             <div id="likes" @click="likes(detail.id)">
                                 <div :style="{color:userLikes.indexOf(detail.id)>-1?'red':''}">
                                     &#9825;
+                                    <!-- it's a heart -->
                                 </div>
                             </div>
                         </div>
-                        
                         <div id="comments">
                             <hr class="mysplit-color"/>
                             <div class="comment" v-for="(root, key) in detail.comments">
@@ -200,192 +70,7 @@
         <script type="text/javascript" src="/statics/scripts/axios/axios.min.js"></script>
         <script type="text/javascript" src="/statics/scripts/ws.js"></script>
         <script type="text/javascript" src="/statics/scripts/root.js"></script>
-        <script>
-         let loadingData = false;
-         document.addEventListener('scroll', function (event) {
-             if (document.body.scrollTop  >= 0.9*(document.body.scrollHeight - window.innerHeight)) {
-                 if(!loadingData)
-                     {
-                         let imgNum = document.getElementsByClassName("listimg").length;
-                         loadingData = true;
-                         axios.get('/api/getPhotoList?more='+imgNum).then(res =>{
-                             console.log(res)
-                             let data = res.data.content;
-                             if(data.length >0)
-                                 {
-                                     for(i in data)
-                                         {
-                                             urls.push(data[i].url)
-                                         }
-                                     loadingData =false;
-                                 }
-                         });
-                     }
-             }
-         });
-        </script>
-        <script>
+        <script type="text/javascript" src="/statics/scripts/gallery.js"></script>
 
-         exifinfo = ['FNumber', 'ExposureTime', 'FocalLength','ISOSpeedRatings','Model',
-                     'PixelXDimension','PixelYDimension'];
-
-         var urls=[]; var photoIds = []; var userLikes = [];
-         axios.get('/api/getPhotoList')
-              .then(res=>{
-                  let data = res.data.content;
-
-                  for(i in data)
-                      {
-                          urls.push(data[i].url);
-                          photoIds.push(data[i]._id);
-                      }
-              });
-         axios.get('/api/getLikes',{
-             params: {
-                 id: getCookie('userid')
-             }
-         }).then(res => {
-             console.log('getlikes');
-             if(res.data.code == 200)
-                 {
-                     content.userLikes = res.data.content.likes;
-                 }
-         });
-         cols = window.matchMedia('screen and (max-width: 1000px)').matches ? 1:2;
-         width = document.body.clientWidth;
-         width = cols == 1? parseInt(width*0.85): parseInt(width * 0.3);
-         var content = new Vue({
-             el: '.content',
-             data:{
-                 userId: getCookie('userid'),
-                 isMobile: window.matchMedia('screen and (max-width: 1000px)').matches,
-                 url: urls,
-                 colnum:cols,
-                 w: width,
-                 userLikes: userLikes,
-                 detail:{
-                     exif: '',
-                     url: '',
-                     index: -1,
-                     id: '',
-                     comment: '',
-                     comments: {},
-                     fatherId: '0',
-                     rootId: '',
-                 },
-                 maskShow : false,
-             },
-             methods:
-                 {
-                     prevent: function($event){
-                         $event.stopPropagation();
-                         $event.preventDefault();
-                     },
-                     maskClose: function(){
-                         content.maskShow = false;
-                     },
-                     likes: function(id) {
-                         axios.post("/api/likes",{
-                             id: id
-                         }).then(res => {
-                             console.log(res.data.content);
-                             if(res.data.code == 200)
-                                 {
-                                     content.userLikes.push(id);
-                                 }
-                         })
-                     },
-                     reply: function(rid, rootId){
-                         content.detail.fatherId = rid;
-                         content.detail.rootId = rootId;
-                         let cc = document.getElementById("comment-content");
-                         cc.setAttribute("placeholder", "reply:");
-                         cc.focus();
-                     },
-                     addComment: function(index){
-                         axios.post('/api/addComment',{
-                             /* userLikes: [],*/
-                             type: 'gallery',
-                             content: content.detail.comment,
-                             id: photoIds[index],
-                             fatherId: content.detail.fatherId,
-                             rootId: content.detail.rootId,
-                             userId: content.userId
-                         }).then(res => {
-                             
-                             if(res.data.code != 200)
-                                 {
-                                     console.log('err add comment');
-                                 }
-                             else
-                                 {
-                                     let data = res.data.content;
-                                     console.log(data)
-                                     if(content.detail.fatherId!='0'){
-                                         content.detail.comments[data.rootId].replies[data._id]={
-                                             value: data.content,
-                                             replyUser: data.fatherId
-                                         }
-                                     }
-                                     else{
-                                         content.detail.comments[data._id] = {
-                                             value: data.content,
-                                             replies: {}
-                                         }
-                                     }
-                                     content.detail.comment = '';
-                                     content.detail.fatherId = '0';
-                                     content.detail.rootId = '';
-                                 }
-                         });
-                     },
-                     
-                     getDetail:function(index, $event=null){
-                         content.detail.index = index;
-                         content.detail.id = photoIds[index];
-
-                         content.maskShow = true;
-                         axios.get('/api/getComment',{
-                             params:{
-                                 type: 'gallery',
-                                 id: photoIds[index]
-                             }
-                         }).then(res => {
-                             console.log(res.data);
-                             content.detail.comments = res.data.content;
-                         });
-                         axios.get(urls[index]+'?exif').then(res => {
-                             console.log(res.data);
-                             let imageX = res.data[exifinfo[5]].val,
-                                 imageY = res.data[exifinfo[6]].val;
-                             let screenY = content.isMobile? parseInt(document.body.clientHeight*0.3): parseInt(document.body.clientHeight*0.5),
-                                 screenX = content.isMobile? parseInt(document.body.clientWidth*0.8): parseInt(document.body.clientWidth*0.35);
-                             let url = '';
-                             console.log(imageX/screenX);
-                             console.log(imageY/screenY);
-                             if(imageX/screenX > imageY/screenY)
-                                 {
-                                     url = urls[index] + '?imageView2/2/w/'+screenX;
-                                 }
-                             else
-                                 {
-                                     url = urls[index] + '?imageView2/2/h/'+screenY;
-                                 }
-                             if(!content.isMobile)
-                                 {
-                                     content.detail.url = url;
-                                 }
-                             content.detail.exif = `${res.data[exifinfo[0]].val}, ${res.data[exifinfo[1]].val},
-${res.data[exifinfo[4]].val}, ${res.data[exifinfo[2]].val}, ISO ${res.data[exifinfo[3]].val}`;
-                         });
-                         if($event !== null)
-                             {
-                                 $event.stopPropagation();
-                             }
-                     }
-                 }
-         });
-        </script>
     </body>
-    
 </html>

@@ -31,6 +31,7 @@ window.onload = function(){
         {
             setCookie('username', data.user, 7);
             setCookie('userid', data._id, 7);
+            navbar.user = data.user;
             ws = startWS();
         }
         else{
@@ -43,13 +44,19 @@ window.onload = function(){
     navbar = new Vue({
         el:".navbar",
         data:{
-            user:getCookie("username"),
+            user: '' ,
             name: '',
             passwd: '',
-             },
+            signin: false,
+        },
         methods:{
+            doLogin: function(){
+                if(this.user == '')
+                {
+                    this.signin = true;
+                }
+            },
             login:function(){
-                console.log('login');
                 axios.post('/api/login', {
                     user: navbar.name,
                     pass: navbar.passwd
@@ -59,8 +66,7 @@ window.onload = function(){
                     {
                         setCookie('username', data.user, 7);
                         setCookie('userid', data._id, 7);
-                        navbar.user = data.user;
-                        ws = startWS();
+                        window.location.href = window.location.href;
                     }
                 });
             }

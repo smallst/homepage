@@ -24,8 +24,8 @@
         <div class="header">
             <div class="navbar">
                 <h1>欢迎来到 smallst.me</h1>
-                <div class="user" >{{user?user:'sign in'}}</div>
-                <div class="login" :class="{anonymous: !user}">
+                <div class="user" @click="doLogin()">{{user?user:'sign in'}}</div>
+                <div class="login" :class="{anonymous: signin}">
                     <input type="text" name="user" value="" v-model="name" placeholder="username" />
                     <input type="password" name="passwd" value="" v-model="passwd" placeholder="passwd" />
                     <input name="" type="button" value="登录" @click="login" />

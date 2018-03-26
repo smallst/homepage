@@ -1,5 +1,4 @@
 const Photo = global.model.Photo;
-const User = global.model.User;
 let addPhoto = async (ctx, next) => {
     await next();
     let name = ctx.request.body.key;
@@ -17,24 +16,6 @@ let addPhoto = async (ctx, next) => {
             content: err
         };
     });
-};
-let commentPhoto = async (ctx, next) => {
-    await next();
-};
-let likePhoto = async (ctx, next) => {
-    await next();
-    let userId = ctx.cookies.get('id');
-    let photoId = ctx.request.body.id;
-    await User.update({
-        _id: userId
-    },{$push: {likes: photoId}})
-        .exec()
-        .then(res => {
-            ctx.body={
-                code: 200,
-                content: res
-            };
-        });
 };
 let getPhotoList = async (ctx, next) => {
     await next();
@@ -103,9 +84,6 @@ let getPhotoList = async (ctx, next) => {
                 });
         }
     }
-};
-let getPhotoDetail = async (ctx, next) => {
-    await next();
 };
 
 module.exports = {
