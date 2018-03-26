@@ -39,17 +39,20 @@ axios.get('/api/getPhotoList')
             photoIds.push(data[i]._id);
         }
     });
-axios.get('/api/getLikes',{
-    params: {
-        id: getCookie('userid')
-    }
-}).then(res => {
-    console.log('getlikes');
-    if(res.data.code == 200)
-    {
-        content.userLikes = res.data.content.likes;
-    }
-});
+if(getCookie('userid')!= '')
+{
+    axios.get('/api/getLikes',{
+        params: {
+            id: getCookie('userid')
+        }
+    }).then(res => {
+        console.log('getlikes');
+        if(res.data.code == 200)
+        {
+            content.userLikes = res.data.content.likes;
+        }
+    });
+}
 var content = new Vue({
     el: '.content',
     data:{
@@ -171,7 +174,7 @@ var content = new Vue({
                     content.detail.url = url;
                 }
                 content.detail.exif = `${exif[exifinfo[0]]}, ${exif[exifinfo[1]]},
--${exif[exifinfo[4]]}, ${exif[exifinfo[2]]}, ISO ${exif[exifinfo[3]]}`;
+${exif[exifinfo[4]]}, ${exif[exifinfo[2]]}, ISO ${exif[exifinfo[3]]}`;
 
             });
             if($event !== null)
