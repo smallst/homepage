@@ -13,7 +13,7 @@ let getExif =async (ctx, next) => {
     {
         let repo = await ctx.get(res.url + '?exif');
         let exifinfo = ['FNumber', 'ExposureTime', 'FocalLength','ISOSpeedRatings','Model',
-                        'PixelXDimension','PixelYDimension'];
+                        'ImageWidth','ImageLength'];
         repo = JSON.parse(repo);
         let exif = {};
         for(let key in repo)
@@ -23,6 +23,12 @@ let getExif =async (ctx, next) => {
                 exif[key] = repo[key].val;
             }
         }
+        if(repo['PixelXDimension'] !=undefined)
+        {
+            res.exif.ImageWidth = res.exif.PixelXDimension;
+            res.exif.ImageLength = res.exif.PixelYDimension;
+        }
+
         await Photo.update({_id:id},{$set: {exif: exif}}).exec();
         ctx.body = {
             code: 200,

@@ -3,7 +3,7 @@ let cols = window.matchMedia('screen and (max-width: 1000px)').matches ? 1:2;
 let width = document.body.clientWidth;
 width = cols == 1? parseInt(width*0.85): parseInt(width * 0.3);
 let exifinfo = ['FNumber', 'ExposureTime', 'FocalLength','ISOSpeedRatings','Model',
-                'PixelXDimension','PixelYDimension'];
+                'ImageWidth','ImageLength'];
 
 document.addEventListener('scroll', function (event) {
     if (document.body.scrollTop  >= 0.9*(document.body.scrollHeight - window.innerHeight)) {
