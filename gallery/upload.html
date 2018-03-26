@@ -108,7 +108,7 @@
                                               data.append('token', res.data.content.token);
                                               data.append('file', files[i]);
                                               data.append('key', res.data.content.key);
-                                              axios.post("http://upload.qiniup.com/",
+                                              axios.post("https://upload.qiniup.com/",
                                                          data,{'Content-Type':'multipart/form-data'})
                                                    .then(res=>{
                                                        console.log(res);
