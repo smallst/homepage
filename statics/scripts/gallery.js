@@ -34,7 +34,7 @@ axios.get('/api/getPhotoList')
 
         for(i in data)
         {
-            urls.push(data[i].url);
+            urls.push(data[i].url.replace(/^http/,'https'));
             photoIds.push(data[i]._id);
         }
     });
@@ -148,7 +148,7 @@ var content = new Vue({
                 console.log(res.data);
                 content.detail.comments = res.data.content;
             });
-            axios.get(urls[index]+'?exif').then(res => {
+            axios.get((urls[index]+'?exif')).then(res => {
                 console.log(res.data);
                 let imageX = res.data[exifinfo[5]].val,
                     imageY = res.data[exifinfo[6]].val;
