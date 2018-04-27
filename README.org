@@ -1,0 +1,25 @@
+* homepage [25%]
+  - [ ] recent activities
+  - [ ] styles
+  - [X] user
+  - [ ] notification
+** TODO blog[0%]
+   - [ ] list
+   - [ ] detail
+   - [ ] comment
+** DONE gallery[100%]
+   CLOSED: [2018-03-18 Sun 22:36]
+   - State "DONE"       from "TODO"       [2018-03-18 Sun 22:36]
+   - [X] list
+   - [X] upload
+   - [X] dynamic load image
+   - [X] comment
+   - [X] likes
+   - [X] big image
+** TODO story[33%]
+   - [X] list
+   - [ ] detail
+   - [ ] comment
+** TODO profile[50%]
+   - [X] social
+   - [ ] details
