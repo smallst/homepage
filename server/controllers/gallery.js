@@ -23,10 +23,11 @@ let getExif =async (ctx, next) => {
                 exif[key] = repo[key].val;
             }
         }
+        console.log(exif);
         if(repo['PixelXDimension'] !=undefined)
         {
-            res.exif.ImageWidth = res.exif.PixelXDimension;
-            res.exif.ImageLength = res.exif.PixelYDimension;
+            exif['ImageWidth'] = repo['PixelXDimension'].val;
+            exif['ImageLength'] = repo['PixelYDimension'].val;
         }
 
         await Photo.update({_id:id},{$set: {exif: exif}}).exec();
@@ -36,6 +37,11 @@ let getExif =async (ctx, next) => {
         };
     }
     else{
+        if(res.exif['ImageWidth'] == undefined)
+        {
+            res.exif['ImageWidth'] = res.exif['PixelXDimension'];
+            res.exif['ImageLength'] = res.exif['PixelYDimension'];
+        }
         ctx.body = {
             code: 200,
             content: res.exif

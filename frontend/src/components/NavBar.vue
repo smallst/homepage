@@ -32,20 +32,55 @@
                  }
          },
          login:function(){
-             axios.post('/api/login', {
-                 user: navbar.name,
-                 pass: navbar.passwd
-             }).then(res => {
+             let that =this;
+             utils.post('login',{
+                 user: that.name,
+                 pass: that.passwd
+             }, res => {
                  let data = res.data.content;
+                 console.log(data);
                  if(res.data.code == '200')
                      {
-                         setCookie('username', data.user, 7);
-                         setCookie('userid', data._id, 7);
+                         utils.setCookie('username', data.user, 7);
+                         utils.setCookie('userid', data._id, 7);
                          /* window.location.href = window.location.href;*/
-                         this.$router.go();
+                         that.$router.go();
                      }
              });
+             /*
+                axios.post('/api/login', {
+                user: that.name,
+                pass: that.passwd
+                }).then(res => {
+                let data = res.data.content;
+                if(res.data.code == '200')
+                {
+                utils.setCookie('username', data.user, 7);
+                utils.setCookie('userid', data._id, 7);
+                // window.location.href = window.location.href;
+                that.$router.go();
+                }
+                });
+              */
          }
+     },
+     mounted(){
+         let that = this;
+         utils.get('checkLogin', res => {
+             let data = res.data.content;
+             console.log(data);
+             if(res.data.code == 200)
+                 {
+                     utils.setCookie('username', data.user, 7);
+                     utils.setCookie('userid', data._id, 7);
+                     that.user = data.user;
+                     /*ws = utils.startWS();*/ /*todo*/
+                 }
+             else{
+                 utils.setCookie('username', '', 7);
+                 utils.setCookie('userid', '', 7);
+             }
+         });
      }
  }
 </script>

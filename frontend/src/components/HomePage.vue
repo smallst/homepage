@@ -7,7 +7,7 @@
             <p>这里可能有：</p>
             <ul>
                 <li><a href="blog/">博客</a></li>
-                <li><a href="gallery/">图库</a></li>
+                <li><router-link to="gallery">图库</router-link></li>
                 <li><a href="story/">故事</a></li>
                 <!-- <li><a href="profile/">我</a></li> -->
                 <li><router-link to="profile">我</router-link></li>
