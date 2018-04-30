@@ -48,8 +48,7 @@
      margin-top: 0;
      margin-bottom: 1em;
      height: 2px;
-     background-image: -webkit-gradient(linear,0 0, 100% 0 ,from(transparent), to(transparent),color-stop(10%,  var(--pink)) , color-stop(90%,  var(--pink)));
-     -moz-background-image: -moz-linear-gradient(left, transparent ,var(--pink) 10%, var(--pink) 90%, transparent 100%);
+     background-image: linear-gradient(to right, transparent, var(--pink) 10%, var(--pink) 90%, transparent 100%);
 
  }
 

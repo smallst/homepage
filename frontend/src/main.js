@@ -4,10 +4,14 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+// import VueKatex from 'vue-katex'
+
 // import axios from 'axios'
 import utils from '@/utils'
 // window.axios=axios;
 global.utils = utils;
+
+// Vue.use(VueKatex)
 
 Vue.config.productionTip = false
 

@@ -94,9 +94,6 @@
                      /* that.photoIds.push(data[i]._id);*/
                  }
          });
-         /*
-            
-          */
      },
      components:{
          'nav-bar': NavBar,

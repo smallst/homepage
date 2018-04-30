@@ -6,7 +6,7 @@
         <div class="content">
             <p>这里可能有：</p>
             <ul>
-                <li><a href="blog/">博客</a></li>
+                <li><router-link to="bloglist">博客</router-link></li>
                 <li><router-link to="gallery">图库</router-link></li>
                 <li><a href="story/">故事</a></li>
                 <!-- <li><a href="profile/">我</a></li> -->
