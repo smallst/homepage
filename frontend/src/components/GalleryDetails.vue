@@ -60,7 +60,7 @@
      props: ['initPhoto', 'isMobile', 'photos', 'user'],
      data () {
          return {
-             userId: user.id,
+             userId: '',
              exif: '',
              url: '',
              index: this.initPhoto.index,
@@ -178,8 +178,9 @@ ${exif[that.exifinfo[4]]}, ${exif[that.exifinfo[2]]}, ISO ${exif[that.exifinfo[3
          console.log(this.photos)
          let that = this;
          this.getDetail(this.index);
+         that.userId = that.user.id;
          /* that.userId = utils.getCookie('userid');*/
-         if(that.userId!= '')
+         if(that.userId!= undefined)
              {
                  utils.get('getLikes?id='+that.userId, res=>{
                      console.log('getlikes');
