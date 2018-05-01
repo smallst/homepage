@@ -1,16 +1,16 @@
 <template>
     <div>
         <nav-bar @userCheck="setUser">
-            <div slot="title">Upload</div>
+            <div slot="title">Edit</div>
         </nav-bar>
         <div class="content">
-            <div class="menu">
-                <div :class="{select: sel == 0}" @click="select(0)">Blog</div>
-                <div :class="{select: sel == 1}" @click="select(1)">Stroy</div>
-                <div :class="{select: sel == 2}" @click="select(2)">Gallery</div>
-            </div>
-            <blog-upload v-if="sel == 0"></blog-upload>
-            <gallery-upload v-if="sel == 2"></gallery-upload>
+            <!-- <div class="menu"> -->
+            <!-- <div :class="{select: sel == 0}" @click="select(0)">Blog</div> -->
+            <!-- <div :class="{select: sel == 1}" @click="select(1)">Stroy</div> -->
+            <!-- <div :class="{select: sel == 2}" @click="select(2)">Gallery</div> -->
+            <!-- </div> -->
+            <blog-upload v-if="type == 'blog'" :edit="true" :id="id"></blog-upload>
+            <!-- <story-upload v-if="type == 'story'" :edit="true" :id="id"></story-upload> -->
         </div>
     </div>
 </template>
@@ -18,32 +18,30 @@
 <script>
  import NavBar from '@/components/NavBar';
  import BlogUpload from '@/components/BlogUpload';
- import GalleryUpload from '@/components/GalleryUpload';
  export default {
-     name: 'Upload',
+     name: 'Edit',
+     props: ['id', 'type'],
      data () {
          return {
-             msg: 'Welcome to Your Vue.js App',
-             sel: 0,
-             user: {},
+             user:{}
          }
      },
      methods:{
-         setUser: function(user){
+         setUser:function(user){
              this.user = user;
-             if(this.user.name != 'smallst')
+             if(this.user.name!='smallst')
                  {
                      this.$router.push('/');
                  }
-         },
-         select: function(i){
-             this.sel = i;
          }
+     },
+     mounted(){
+         console.log(this.id)
+         console.log(this.type);
      },
      components:{
          NavBar,
          BlogUpload,
-         GalleryUpload,
      }
  }
 </script>

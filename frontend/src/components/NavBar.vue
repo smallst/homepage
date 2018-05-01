@@ -2,7 +2,7 @@
     <div>
         <div class="navbar">
             <h1><slot name="title" ></slot></h1>
-            <div class="user" @click="doLogin()">{{user?user:'sign in'}}</div>
+            <div class="user" @click="doLogin()">{{user.name?user.name:'sign in'}}</div>
             <div class="login" :class="{anonymous: signin}">
                 <input type="text" name="user" value="" v-model="name" placeholder="username" />
                 <input type="password" name="passwd" value="" v-model="passwd" placeholder="passwd" />
@@ -18,7 +18,7 @@
      name: 'NavBar',
      data () {
          return {
-             user: '' ,
+             user: {},
              name: '',
              passwd: '',
              signin: false,
@@ -26,7 +26,7 @@
      },
      methods:{
          doLogin: function(){
-             if(this.user == '')
+             if(this.user.name == undefined)
                  {
                      this.signin = true;
                  }
@@ -47,21 +47,6 @@
                          that.$router.go();
                      }
              });
-             /*
-                axios.post('/api/login', {
-                user: that.name,
-                pass: that.passwd
-                }).then(res => {
-                let data = res.data.content;
-                if(res.data.code == '200')
-                {
-                utils.setCookie('username', data.user, 7);
-                utils.setCookie('userid', data._id, 7);
-                // window.location.href = window.location.href;
-                that.$router.go();
-                }
-                });
-              */
          }
      },
      mounted(){
@@ -73,13 +58,19 @@
                  {
                      utils.setCookie('username', data.user, 7);
                      utils.setCookie('userid', data._id, 7);
-                     that.user = data.user;
+                     that.user={
+                         name: data.user,
+                         id: data._id
+                     };
                      /*ws = utils.startWS();*/ /*todo*/
                  }
              else{
                  utils.setCookie('username', '', 7);
                  utils.setCookie('userid', '', 7);
+                 that.user = {};
              }
+             console.log('emit');
+             that.$emit('userCheck', that.user);
          });
      }
  }

@@ -1,7 +1,6 @@
 <template>
     <div id="mask">
         <div class="prev" :class="{hide:isMobile || index==0 }" @click="getDetail(index-1, $event)">
-            <!-- <i class="fas fa-angle-left"></i> -->
             <font-awesome-icon icon="angle-left" />
         </div>
         <div class="detail" @click="prevent($event)">
@@ -19,14 +18,12 @@
                         <div class="rootComment" v-if="root">
                             {{root.value}}
                             <div class="reply-icon" @click="reply(key, key)">
-                                <!-- <i class="fas fa-reply"></i> -->
                                 <font-awesome-icon icon="reply"/>
                             </div>
                         </div>
                         <div class="replies" v-if="root" v-for="(rep, rid) in root.replies">
                             {{rep.value}}
                             <div class="reply-icon" @click="reply(rid, key)">
-                                <!-- <i class="fas fa-reply"></i> -->
                                 <font-awesome-icon icon="reply"/>
                             </div>
                         </div>
@@ -42,7 +39,6 @@
             </div>
         </div>
         <div class="next" :class="{hide:isMobile|| index==photos.length-1 }" @click="getDetail(index+1, $event)">
-            <!-- <i class="fas fa-angle-right"></i> -->
             <font-awesome-icon icon="angle-right"/>
         </div>
     </div>
@@ -61,10 +57,10 @@
  fontawesome.library.add(faReply,faArrowLeft, faArrowRight, faHeart, faHeartO);
  export default {
      name: 'GalleryDetails',
-     props: ['initPhoto', 'isMobile', 'photos'],
+     props: ['initPhoto', 'isMobile', 'photos', 'user'],
      data () {
          return {
-             userId: '',
+             userId: user.id,
              exif: '',
              url: '',
              index: this.initPhoto.index,
@@ -182,7 +178,7 @@ ${exif[that.exifinfo[4]]}, ${exif[that.exifinfo[2]]}, ISO ${exif[that.exifinfo[3
          console.log(this.photos)
          let that = this;
          this.getDetail(this.index);
-         that.userId = utils.getCookie('userid');
+         /* that.userId = utils.getCookie('userid');*/
          if(that.userId!= '')
              {
                  utils.get('getLikes?id='+that.userId, res=>{

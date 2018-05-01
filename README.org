@@ -3,9 +3,9 @@
   - [ ] styles
   - [X] user
   - [ ] notification
-** TODO blog[0%]
-   - [ ] list
-   - [ ] detail
+** TODO blog[66%]
+   - [X] list
+   - [X] detail
    - [ ] comment
 ** DONE gallery[100%]
    CLOSED: [2018-03-18 Sun 22:36]

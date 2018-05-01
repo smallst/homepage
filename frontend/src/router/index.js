@@ -8,6 +8,7 @@ import StoryMenu from '@/pages/StoryMenu';
 import Story from '@/pages/Story';
 import Profile from '@/pages/Profile';
 import Upload from '@/pages/Upload';
+import Edit from '@/pages/Edit';
 
 Vue.use(Router);
 
@@ -54,6 +55,12 @@ export default new Router({
             path: '/upload',
             name: 'upload',
             component: Upload
+        },
+        {
+            path: '/edit/:type/:id',
+            name: 'edit',
+            props: true,
+            component: Edit
         }
     ]
 });

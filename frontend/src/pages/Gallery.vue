@@ -1,11 +1,10 @@
 <template>
     <div>
-        <nav-bar>
+        <nav-bar @userCheck="setUser">
             <div slot="title">Gallery</div>
         </nav-bar>
-        
         <div class="mask" :class="{show: mask}" @click="maskClose()">
-            <gallery-detail :initPhoto="focusP" :isMobile="colnum==1" :photos="photos" v-if="mask" />
+            <gallery-detail :initPhoto="focusP" :isMobile="colnum==1" :photos="photos" :user="user" v-if="mask" />
         </div>
         <div class="content">
             <p>希望有朝一日这里的图片都有自己的风格</p>
@@ -28,15 +27,17 @@
          return {
              mask: false,
              focusP: {},
-             /* urls: [],*/
-             /* photoIds: [],*/
              photos: [],
              colnum: 1,
              w: 0,
              loadingData: false,
+             user:{}
          }
      },
      methods:{
+         setUser: function(user){
+             this.user = user;
+         },
          maskClose: function(){
              this.mask = false;
          },
@@ -73,8 +74,6 @@
                                                  url: data[i].url,
                                                  id: data[i]._id,
                                              });
-                                             /* that.urls.push(data[i].url);*/
-                                             /* that.photoIds.push(data[i]._id);*/
                                          }
                                      that.loadingData =false;
                                  }

@@ -1,9 +1,12 @@
 <template>
     <div>
-        <nav-bar>
+        <nav-bar v-on:userCheck="setUser">
             <div slot="title">{{title}}</div>
         </nav-bar>
-        <div class="content" v-html="body"></div>
+        <div class="content">
+            <div v-if="edit"><router-link  :to="{name:'edit',params:{type:'blog',id:id}}">edit</router-link></div>
+            <div v-html="body"></div>
+        </div>
     </div>
 </template>
 
@@ -25,10 +28,20 @@
              msg: 'Welcome to Your Vue.js App',
              title: 'a',
              body: '',
+             edit: false,
+             user: {},
+         }
+     },
+     methods:{
+         setUser:function(user){
+             this.user = user;
+             if(this.user.name == 'smallst')
+             {
+                 this.edit = true;
+             }
          }
      },
      mounted(){
-         console.log(this.id);
          let that = this;
          utils.get('getBlogDetail?id='+that.id, res=>{
              if(res.data.code == 200)
