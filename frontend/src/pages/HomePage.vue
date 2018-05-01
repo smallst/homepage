@@ -8,7 +8,7 @@
             <ul>
                 <li><router-link to="bloglist">博客</router-link></li>
                 <li><router-link to="gallery">图库</router-link></li>
-                <li><a href="story/">故事</a></li>
+                <li><router-link to="storymenu">故事</router-link></li>
                 <!-- <li><a href="profile/">我</a></li> -->
                 <li><router-link to="profile">我</router-link></li>
                 <li>其他...</li>

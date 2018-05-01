@@ -1,13 +1,13 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import HomePage from '@/components/HomePage';
-import Profile from '@/components/Profile';
-import Gallery from '@/components/Gallery';
-import BlogList from '@/components/BlogList';
-import Upload from '@/components/Upload';
-import StoryMenu from '@/components/StoryMenu';
-import Story from '@/components/Story';
-import Blog from '@/components/Blog';
+import HomePage from '@/pages/HomePage';
+import Gallery from '@/pages/Gallery';
+import BlogList from '@/pages/BlogList';
+import Blog from '@/pages/Blog';
+import StoryMenu from '@/pages/StoryMenu';
+import Story from '@/pages/Story';
+import Profile from '@/pages/Profile';
+import Upload from '@/pages/Upload';
 
 Vue.use(Router);
 
@@ -45,8 +45,9 @@ export default new Router({
             component: StoryMenu
         },
         {
-            path:'/story',
+            path:'/story/:number',
             name:'story',
+            props: true,
             component: Story
         },
         {
