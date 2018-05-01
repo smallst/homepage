@@ -34,8 +34,9 @@ export default new Router({
             component: BlogList
         },
         {
-            path: '/blog',
+            path: '/blog/:id',
             name: 'blog',
+            props:true,
             component: Blog
         },
         {

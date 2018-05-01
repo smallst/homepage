@@ -65,7 +65,7 @@ let getBlogDetail = async (ctx, next) => {
 };
 
 module.exports = {
-    // "POST /addCourse"  : addCourse,
+    "POST /addBlog"  : addBlog,
     "GET /getBlogList" :  getBlogList,
     "GET /getBlogDetail" :  getBlogDetail,
 

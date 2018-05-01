@@ -4,7 +4,7 @@
             <input name="title" type="text" v-model="title" placeholder="title" />
             <div class="split-view">
                 <textarea id="text-input" @input="update" class="half"
-                          v-model="value"></textarea>
+                          v-model="body"></textarea>
                 <div id="preview" v-html="preview" class="half"></div>
             </div>
             <!-- <input name="body" type="text" v-model="body" /> -->
@@ -33,28 +33,29 @@
              title: '',
              body: '',
              preview: '',
-             value: '```python import numpy \ndef fun():\n  return 0\n```',
+             /* value: '```python import numpy \ndef fun():\n  return 0\n```',*/
          }
      },
      methods:{
          update: function(){
              console.log('update');
-             this.preview = markdown.render(this.value);
+             this.preview = markdown.render(this.body);
              setTimeout(function(){
                  let pres = document.querySelectorAll('pre code');
                  pres.forEach(e=>hljs.highlightBlock(e));
              }, 100);
          },
          upload:function(){
+             let that = this;
              utils.post('addBlog',{
                  type:'',
                  tag:'',
-                 title:blog.title,
-                 content:blog.body
+                 title:that.title,
+                 content:that.body
              },res => {
-                 if(res.data == 200)
+                 if(res.data.code == 200)
                      {
-                         blog.title = blog.body = '';
+                         that.title = that.body = '';
                      }
              })
          }
