@@ -10,6 +10,7 @@
                     <div :class="{select: sel == 2}" @click="select(2)">Gallery</div>
             </div>
             <blog-upload v-if="sel == 0"></blog-upload>
+            <gallery-upload v-if="sel == 2"></gallery-upload>
         </div>
     </div>
 </template>
@@ -17,6 +18,7 @@
 <script>
  import NavBar from '@/components/NavBar';
  import BlogUpload from '@/components/BlogUpload';
+ import GalleryUpload from '@/components/GalleryUpload';
  export default {
      name: 'Upload',
      data () {
@@ -39,7 +41,8 @@
      },
      components:{
          NavBar,
-         BlogUpload
+         BlogUpload,
+         GalleryUpload,
      }
  }
 </script>

@@ -3,6 +3,9 @@ export default{
     post: (path, data, succ=null, err=null, final=null) => {
         axios.post('/api/'+path, data).then(succ).catch(err).finally(final);
     },
+    formpost: (path, data, succ=null, err=null, final=null) => {
+        axios.post(path, data, {"Content-Type":"multipart/form-data"}).then(succ).catch(err).finally(final);
+    },
     get: (path, succ, err=null, final=null)=>{
         axios.get('/api/'+path).then(succ).catch(err).finally(final);
     },
