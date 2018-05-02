@@ -39,25 +39,18 @@
              }, res => {
                  let data = res.data.content;
                  console.log(data);
-                 if(res.data.code == '200')
-                     {
-                         utils.setCookie('username', data.user, 7);
-                         utils.setCookie('userid', data._id, 7);
-                         /* window.location.href = window.location.href;*/
-                         that.$router.go();
-                     }
+                 that.$router.go();
              });
          }
      },
      mounted(){
          let that = this;
          utils.get('checkLogin', res => {
+             console.log('checkLogin');
              let data = res.data.content;
              console.log(data);
              if(res.data.code == 200)
                  {
-                     utils.setCookie('username', data.user, 7);
-                     utils.setCookie('userid', data._id, 7);
                      that.user={
                          name: data.user,
                          id: data._id
@@ -65,8 +58,6 @@
                      /*ws = utils.startWS();*/ /*todo*/
                  }
              else{
-                 utils.setCookie('username', '', 7);
-                 utils.setCookie('userid', '', 7);
                  that.user = {};
              }
              console.log('emit');

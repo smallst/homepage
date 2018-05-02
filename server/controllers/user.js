@@ -1,8 +1,11 @@
 const User = global.model.User;
 function doLogin(id, user, ctx)
 {
-    ctx.cookies.set('id', id, {maxAge: 7*24*3600});
-    ctx.cookies.set('name', user, {maxAge: 7*24*3600});
+    ctx.session.id=id;
+    ctx.session.name=user;
+    ctx.session.lastLogin=new Date();
+    ctx.cookies.set('id', id, {maxAge: 10*24*3600});
+    ctx.cookies.set('name', user, {maxAge: 10*24*3600});
 }
 let login = async (ctx, next) => {
     await next();
@@ -28,10 +31,8 @@ let login = async (ctx, next) => {
 };
 let checkLogin = async(ctx, next) =>{
     await next();
-    // let user = ctx.request.body.user || '';
-    // let id = ctx.request.body.id || '';
-    let id = ctx.cookies.get("id");
-    let user = ctx.cookies.get("name");
+    let id = ctx.session.id || '';
+    let user = ctx.session.name || '';
     await User.findOne({
         user: user,
         _id: id
@@ -87,8 +88,7 @@ let register = async (ctx, next) => {
 };
 let getLikes = async (ctx, next) => {
     await next();
-    // console.log(ctx.cookies);
-    let id = ctx.cookies.get('id');
+    let id = ctx.session.id;
     console.log(id);
     await User.findOne({_id:id},{likes:1}).exec()
         .then(res => {
@@ -100,7 +100,7 @@ let getLikes = async (ctx, next) => {
 };
 let Likes = async(ctx, next) =>{
     await next();
-    let id = ctx.cookies.get('id');
+    let id = ctx.session.id;
     let likesId = ctx.request.body.id;
     await User.update({_id: id},{$push: {likes: likesId}}).exec()
         .then(res => {
