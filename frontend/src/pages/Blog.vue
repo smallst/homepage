@@ -6,12 +6,14 @@
         <div class="content">
             <div v-if="edit"><router-link  :to="{name:'edit',params:{type:'blog',id:id}}">edit</router-link></div>
             <div v-html="body"></div>
+            <comment :id="id" :type="'blog'" :isMobile="flase" :user="user"></comment>
         </div>
     </div>
 </template>
 
 <script>
  import NavBar from '@/components/NavBar';
+ import Comment from '@/components/Comment';
  import hljs from 'highlight.js'
  require('@/assets/css/katex/katex.min.css');
  require('@/assets/css/highlightjs/monokai.css');
@@ -57,7 +59,8 @@
          });
      },
      components:{
-         NavBar
+         NavBar,
+         Comment
      }
  }
 </script>

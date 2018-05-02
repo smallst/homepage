@@ -12,27 +12,7 @@
                         <font-awesome-icon :icon="['far','heart']" v-else />
                     </div>
                 </div>
-                <div id="comments">
-                    <hr class="mysplit-color"/>
-                    <div class="comment" v-for="(root, key) in comments">
-                        <div class="rootComment" v-if="root">
-                            {{root.value}}
-                            <div class="reply-icon" @click="reply(key, key)">
-                                <font-awesome-icon icon="reply"/>
-                            </div>
-                        </div>
-                        <div class="replies" v-if="root" v-for="(rep, rid) in root.replies">
-                            {{rep.value}}
-                            <div class="reply-icon" @click="reply(rid, key)">
-                                <font-awesome-icon icon="reply"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="comment">
-                    <input type="text" id="comment-content" :disabled="!userId" name="" :style="{width:(isMobile?73:12)+'vw'}" v-model="comment" autofocus="autofocus" />
-                    <input name="" type="button" style="padding: 0 1em;flex-shrink: 0;" value="发送" @click="addComment()" />
-                </div>
+                <comment :id="id" :isMobile="isMobile" :type="'gallery'" :user="user"></comment>
             </div>
             <div class="img">
                 <img id="detail-img" :src="url" alt="" />
@@ -45,16 +25,16 @@
 </template>
 
 <script>
-
+ import Comment from '@/components/Comment';
  import fontawesome from '@fortawesome/fontawesome';
  import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
- import faReply from '@fortawesome/fontawesome-free-solid/faReply';
+ /* import faReply from '@fortawesome/fontawesome-free-solid/faReply';*/
  import faArrowLeft from '@fortawesome/fontawesome-free-solid/faAngleLeft';
  import faArrowRight from '@fortawesome/fontawesome-free-solid/faAngleRight';
  import faHeart from '@fortawesome/fontawesome-free-regular/faHeart';
  import faHeartO from '@fortawesome/fontawesome-free-solid/faHeart';
 
- fontawesome.library.add(faReply,faArrowLeft, faArrowRight, faHeart, faHeartO);
+ fontawesome.library.add(faArrowLeft, faArrowRight, faHeart, faHeartO);
  export default {
      name: 'GalleryDetails',
      props: ['initPhoto', 'isMobile', 'photos', 'user'],
@@ -65,10 +45,10 @@
              url: '',
              index: this.initPhoto.index,
              id: this.initPhoto.id,
-             comment: '',
-             comments: {},
-             fatherId: '0',
-             rootId: '',
+             /* comment: '',*/
+             /* comments: {},*/
+             /* fatherId: '0',*/
+             /* rootId: '',*/
              userLikes: [],
              exifinfo: ['FNumber', 'ExposureTime', 'FocalLength','ISOSpeedRatings','Model', 'ImageWidth','ImageLength'],
          }
@@ -90,56 +70,13 @@
                      }
              });
          },
-         reply: function(rid, rootId){
-             this.fatherId = rid;
-             this.rootId = rootId;
-             let cc = document.getElementById("comment-content");
-             cc.setAttribute("placeholder", "reply:");
-             cc.focus();
-         },
-         addComment: function(){
-             let that = this;
-             utils.post('addComment', {
-                 type: 'gallery',
-                 content: that.comment,
-                 id: that.id,
-                 fatherId: that.fatherId,
-                 rootId: that.rootId,
-                 userId: that.userId
-             }, res => {
-                 if(res.data.code != 200)
-                     {
-                         console.log('err add comment');
-                     }
-                 else
-                     {
-                         let data = res.data.content;
-                         console.log(data);
-                         if(that.fatherId!='0'){
-                             that.comments[data.rootId].replies[data._id]={
-                                 value: data.content,
-                                 replyUser: data.fatherId
-                             };
-                         }
-                         else{
-                             that.comments[data._id] = {
-                                 value: data.content,
-                                 replies: {}
-                             };
-                         }
-                         that.comment = '';
-                         that.fatherId = '0';
-                         that.rootId = '';
-                     }
-             });
-         },
          getDetail:function(index, $event=null){
              let that = this;
              that.index = index;
              that.id = that.photos[index].id;
-             utils.get('getComment?type=gallery&id='+that.id, res=>{
-                 that.comments = res.data.content;
-             });
+             /* utils.get('getComment?type=gallery&id='+that.id, res=>{*/
+             /* that.comments = res.data.content;*/
+             /* });*/
              utils.get('getExif?id='+that.id, res=>{
                  let exif = res.data.content;
                  let imageX = +exif[that.exifinfo[5]],
@@ -192,7 +129,8 @@ ${exif[that.exifinfo[4]]}, ${exif[that.exifinfo[2]]}, ISO ${exif[that.exifinfo[3
              }
      },
      components:{
-         FontAwesomeIcon
+         FontAwesomeIcon,
+         "comment":Comment,
      }
  }
 </script>
@@ -267,25 +205,7 @@ ${exif[that.exifinfo[4]]}, ${exif[that.exifinfo[2]]}, ISO ${exif[that.exifinfo[3
      justify-content:center;
      align-items: center;
  }
- #comment{
-     display:flex;
-     flex-direction: row;
- }
- #comments{
-     flex-grow: 2;
-     overflow-y: auto;
- }
- .rootComment, .replies{
-     display: flex;
-     justify-content: space-between;
- }
- .replies{
-     padding-left:1.4em;
-     padding-right: 0.4em;
- }
- .reply-icon{
-     cursor: pointer;
- }
+
  #likes{
      color: #ed4956;
      cursor: pointer;
