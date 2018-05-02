@@ -5,12 +5,16 @@
         </nav-bar>
         <h2>Our story of Black Party</h2>
         <div class="content">
-            <ul>
-                <li class="menu">
-                    <span class="day"><a href="detail.html">Day 1: New School</a></span>
-                    <span class="eve"><a href="detail.html#eve">Eve 1: Amazing world</a></span>
-                </li>
-            </ul>
+            <div class="split day">
+                <div v-for="day in menu.day">
+                    <router-link :to="{name:'story', params:{id: day._id,number:day.number, part: 'day'}}">Day {{day.number}}: {{day.title}}</router-link>
+                </div>
+            </div>
+            <div class="split eve">
+                <div v-for="eve in menu.eve">
+                   <router-link :to="{name:'story', params:{id: eve._id,number:eve.number, part: 'eve'}}">Eve {{eve.number}}: {{eve.title}}</router-link>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -21,13 +25,15 @@
      name: 'StoryMenu',
      data () {
          return {
-             msg: 'Welcome to Your Vue.js App'
+             menu:{day:[],eve:[]},
          }
      },
      mounted(){
          let that=this;
-         utils.get('getStory', res =>{
-             
+         utils.get('getStoryMenu', res =>{
+             if(res.data.code == 200){
+                 that.menu = res.data.content;
+             }
          })
      },
      components:{
@@ -38,9 +44,12 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
- .menu{
+ .content{
      display: flex;
-     justify-content: space-between;
-     width: 40vw;
+ }
+ .split{
+     width: 45vw;
+     display:flex;
+     flex-direction: column;
  }
 </style>

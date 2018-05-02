@@ -46,7 +46,7 @@ export default new Router({
             component: StoryMenu
         },
         {
-            path:'/story/:number',
+            path:'/story/:number/:part/:id',
             name:'story',
             props: true,
             component: Story
