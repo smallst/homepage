@@ -31,5 +31,5 @@ let server = app.listen(2333);
 console.log('app statred at port 2333...');
 
 const ws = require("./ws");
-app.wss = ws.createWSS(server);
+app.context.wss = ws.createWSS(server);
 console.log('ws on 2333...');

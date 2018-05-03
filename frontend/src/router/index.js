@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import HomePage from '@/pages/HomePage';
+import User from '@/pages/User';
 import Gallery from '@/pages/Gallery';
 import BlogList from '@/pages/BlogList';
 import Blog from '@/pages/Blog';
@@ -13,6 +14,7 @@ import Edit from '@/pages/Edit';
 Vue.use(Router);
 
 export default new Router({
+    // mode: 'history',
     routes: [
         {
             path: '/',
@@ -20,22 +22,30 @@ export default new Router({
             component: HomePage
         },
         {
+            path:'/user/:initInfo',
+            name: 'user',
+            props: true,
+            component: User,
+        },
+        {
             path: '/profile',
             name: 'profile',
             component: Profile
         },
         {
-            path: '/gallery',
-            name: 'gallery',
+            path: '/gallery/:pId?',
+            name: 'photo',
+            props: true,
             component: Gallery
         },
+
         {
             path: '/bloglist',
             name: 'bloglist',
             component: BlogList
         },
         {
-            path: '/blog/:id',
+            path: '/blog/:id/:cId?',
             name: 'blog',
             props:true,
             component: Blog
@@ -46,7 +56,7 @@ export default new Router({
             component: StoryMenu
         },
         {
-            path:'/story/:number/:part/:id',
+            path:'/story/:id/:cId?',
             name:'story',
             props: true,
             component: Story

@@ -1,7 +1,7 @@
 const db = require('../db');
 
 module.exports = db.defineModel('Notification', {
-    User: String,
+    userId: String,
     info: Object,
     read: Boolean,
 });

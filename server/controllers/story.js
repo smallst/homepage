@@ -41,14 +41,17 @@ let getStoryMenu = async (ctx, next) => {
     await next();
     await Promise.all([Story.find({day:true},{'content':0}).sort({'number':-1}).exec(), 
                        Story.find({day:false},{'content':0}).sort({'number':-1}).exec()]).then(res=>{
-            ctx.body={
-                code:200,
-                content:{
-                    day: res[0],
-                    eve: res[1]
-                }
-            };
-        });
+                           ctx.body={
+                               code:200,
+                               content:{
+                                   day: res[0],
+                                   eve: res[1]
+                               }
+                           };
+                       }).catch(err=>{ctx.body={code: 400, content: err}});
+    // let day = await Story.find({day: true}, {content: 0}).sort({number: -1}).exec();
+    // let eve = await Story.find({day: false}, {content: 0}).sort({number: -1}).exec();
+    // ctx.body = {code:200, content:{day:day, eve:eve}};
 };
 let getStoryNumber = async (ctx, next) => {
     await next();

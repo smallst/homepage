@@ -23,6 +23,7 @@
 
  export default {
      name: 'Gallery',
+     props: ['pId'],
      data () {
          return {
              mask: false,
@@ -92,6 +93,15 @@
                      /* that.urls.push(data[i].url);*/
                      /* that.photoIds.push(data[i]._id);*/
                  }
+             console.log('pid:'+that.pId)
+             if(that.pId){
+                 let index = that.photos.findIndex(x => x.id===that.pId);
+                 console.log(index);
+                 if(index != -1)
+                     {
+                         that.maskShow(index);
+                     }
+             }
          });
      },
      components:{

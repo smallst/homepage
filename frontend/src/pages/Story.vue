@@ -26,9 +26,11 @@
  import NavBar from '@/components/NavBar';
  export default {
      name: 'Story',
-     props: ['id','number','part'],
+     props: ['id'],
      data () {
          return {
+             number: 0,
+             part: '',
              title:'',
              body: '',
          }
@@ -40,6 +42,8 @@
                  let data = res.data.content;
                  that.title = data.title;
                  that.body = markdown.render(data.content);
+                 that.part = data.day? 'day':'eve';
+                 that.number = data.number;
              }
          })
      },

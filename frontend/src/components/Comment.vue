@@ -3,13 +3,13 @@
         <div id="comments">
             <hr class="mysplit-color"/>
             <div class="comment" v-for="(root, key) in comments">
-                <div class="rootComment" v-if="root">
+                <div class="rootComment" v-if="root" :id="'anchor-'+key">
                     {{root.value}}
                     <div class="reply-icon" @click="reply(key, key)">
                         <font-awesome-icon icon="reply"/>
                     </div>
                 </div>
-                        <div class="replies" v-if="root" v-for="(rep, rid) in root.replies">
+                        <div class="replies" v-if="root" v-for="(rep, rid) in root.replies" :id="'anchor-'+rid">
                             {{rep.value}}
                             <div class="reply-icon" @click="reply(rid, key)">
                                 <font-awesome-icon icon="reply"/>
@@ -91,6 +91,7 @@
          console.log('comment');
          let that = this;
          utils.get('getComment?type='+that.type+"&id="+that.id, res =>{
+             console.log(res.data.content);
              if(res.data.code == 200)
                  {
                      that.comments = res.data.content;

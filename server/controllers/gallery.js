@@ -2,13 +2,13 @@ const Photo = global.model.Photo;
 let getExif =async (ctx, next) => {
     await next();
     let id = ctx.request.query.id;
-    console.log(id);
+    // console.log(id);
     let res = await Photo.findOne({
         _id: id
     }).then(res =>{
         return res;
     });
-    console.log(res);
+    // console.log(res);
     if(res.exif == null || Object.keys(res.exif).length == 0)
     {
         let repo = await ctx.get(res.url + '?exif');
@@ -23,7 +23,7 @@ let getExif =async (ctx, next) => {
                 exif[key] = repo[key].val;
             }
         }
-        console.log(exif);
+        // console.log(exif);
         if(repo['PixelXDimension'] !=undefined)
         {
             exif['ImageWidth'] = repo['PixelXDimension'].val;

@@ -29,16 +29,16 @@ export default{
         }
         return "";
     },
-    startWS: ()=>{
+    startWS: (onmessage)=>{
         let ws = new WebSocket('ws://localhost/ws/comment');
         let timerID = -1;
         timerID = setInterval(keepAlive, 30000);
-        ws.onmessage = function(event){
-            let data = event.data;
+        // ws.onmessage = function(event){
+            // let data = event.data;
 
-            console.log(JSON.parse(data));
-        };
-
+            // console.log(JSON.parse(data));
+        // };
+        ws.onmessage = onmessage;
         ws.onclose = function(evt){
             clearInterval(timerID);
         };

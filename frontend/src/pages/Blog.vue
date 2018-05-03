@@ -6,7 +6,7 @@
         <div class="content">
             <div v-if="edit"><router-link  :to="{name:'edit',params:{type:'blog',id:id}}">edit</router-link></div>
             <div v-html="body"></div>
-            <comment :id="id" :type="'blog'" :isMobile="flase" :user="user"></comment>
+            <comment :id="id" :type="'blog'" :isMobile="false" :user="user"></comment>
         </div>
     </div>
 </template>
@@ -24,7 +24,7 @@
 
  export default {
      name: 'Blog',
-     props:['id'],
+     props:['id', 'cId'],
      data () {
          return {
              msg: 'Welcome to Your Vue.js App',
@@ -38,9 +38,9 @@
          setUser:function(user){
              this.user = user;
              if(this.user.name == 'smallst')
-             {
-                 this.edit = true;
-             }
+                 {
+                     this.edit = true;
+                 }
          }
      },
      mounted(){
@@ -54,6 +54,13 @@
                      setTimeout(function(){
                          let pres = document.querySelectorAll('pre code');
                          pres.forEach(e=>hljs.highlightBlock(e));
+                         if(that.cId)
+                             {
+                                 console.log('scroll')
+                                 let anchor = document.querySelector('#anchor-'+that.cId);
+                                 console.log(anchor.offsetTop);
+                                 document.scrollingElement.scrollTop=anchor.offsetTop;
+                             }
                      }, 100);
                  }
          });

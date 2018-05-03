@@ -7,12 +7,12 @@
         <div class="content">
             <div class="split day">
                 <div v-for="day in menu.day">
-                    <router-link :to="{name:'story', params:{id: day._id,number:day.number, part: 'day'}}">Day {{day.number}}: {{day.title}}</router-link>
+                    <router-link :to="{name:'story', params:{id: day._id}}">Day {{day.number}}: {{day.title}}</router-link>
                 </div>
             </div>
             <div class="split eve">
                 <div v-for="eve in menu.eve">
-                   <router-link :to="{name:'story', params:{id: eve._id,number:eve.number, part: 'eve'}}">Eve {{eve.number}}: {{eve.title}}</router-link>
+                   <router-link :to="{name:'story', params:{id: eve._id}}">Eve {{eve.number}}: {{eve.title}}</router-link>
                 </div>
             </div>
         </div>

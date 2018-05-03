@@ -2,13 +2,17 @@
     <div>
         <div class="navbar">
             <h1><slot name="title" ></slot></h1>
-            <div class="user" @click="doLogin()">{{user.name?user.name:'sign in'}}</div>
+            <div class="user" @click="doLogin()">
+                {{user.name?user.name:'sign in'}}
+                <span class="unread" v-if="unread">{{unread}}</span>
+            </div>
             <div class="login" :class="{anonymous: signin}">
                 <input type="text" name="user" value="" v-model="name" placeholder="username" />
                 <input type="password" name="passwd" value="" v-model="passwd" placeholder="passwd" />
                 <input name="" type="button" value="登录" @click="login" />
             </div>
         </div>
+        <vue-snotify></vue-snotify>
         <hr class="mysplit-color"/>
     </div>
 </template>
@@ -22,6 +26,7 @@
              name: '',
              passwd: '',
              signin: false,
+             unread: 0,
          }
      },
      methods:{
@@ -30,6 +35,9 @@
                  {
                      this.signin = true;
                  }
+             else{
+                 this.$router.push({name:'user',params:{'initInfo':this.unread?'message':'info'}});
+             }
          },
          login:function(){
              let that =this;
@@ -41,10 +49,21 @@
                  console.log(data);
                  that.$router.go();
              });
-         }
+         },
+         onMessage: function(event){
+             let that = this;
+             let data = JSON.parse(event.data);
+             console.log(data);
+             if(data=="be replied")
+                 {
+                     that.$snotify.success('recive a reply');
+                     that.unread ++;
+                 }
+         },
      },
      mounted(){
          let that = this;
+         window.that = this;
          utils.get('checkLogin', res => {
              console.log('checkLogin');
              let data = res.data.content;
@@ -55,13 +74,20 @@
                          name: data.user,
                          id: data._id
                      };
-                     /*ws = utils.startWS();*/ /*todo*/
+                     if(!utils.ws)
+                     utils.ws = utils.startWS(that.onMessage); 
                  }
              else{
                  that.user = {};
              }
              console.log('emit');
              that.$emit('userCheck', that.user);
+             utils.get('getUnreadNotification?id='+that.user.id,res => {
+                 if(res.data.code == 200){
+                     that.unread = res.data.content;
+                     console.log('unread:'+that.unread);
+                 }
+             })
          });
      }
  }
@@ -108,5 +134,18 @@
  .login > input[type='button']{
      letter-spacing: 1em;
      text-indent: 1em;
+ }
+ .unread{
+     position: absolute;
+     right: 3vw;
+     bottom: 1.3em;
+     width: 1.6em;
+     height: 1.6em;
+     border-radius: 0.8em;
+     display:flex;
+     justify-content:center;
+     align-items: center;
+     color: var(--pink);
+     background-color: var(--foreground-color);
  }
 </style>

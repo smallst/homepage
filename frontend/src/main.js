@@ -3,7 +3,8 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-
+import Snotify, {SnotifyPosition} from 'vue-snotify';
+import 'vue-snotify/styles/simple.css';
 // import VueKatex from 'vue-katex'
 
 // import axios from 'axios'
@@ -12,6 +13,13 @@ import utils from '@/utils'
 global.utils = utils;
 
 // Vue.use(VueKatex)
+const notifyOptions = {
+    toast:{
+        position: SnotifyPosition.rightTop,
+        showProgressBar: false
+    }
+}
+Vue.use(Snotify,notifyOptions)
 
 Vue.config.productionTip = false
 
