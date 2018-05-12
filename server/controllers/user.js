@@ -16,11 +16,11 @@ let login = async (ctx, next) => {
         passwd: pass
     },{likes: 0}).exec()
         .then(res => {
-                doLogin(res._id, res.user, ctx);
-                ctx.body = {
-                    code:200,
-                    content:res
-                };
+            doLogin(res._id, res.user, ctx);
+            ctx.body = {
+                code:200,
+                content:res
+            };
         })
         .catch(err => {
             ctx.body = {
@@ -38,11 +38,11 @@ let checkLogin = async(ctx, next) =>{
         _id: id
     },{likes: 0}).exec()
         .then(res => {
-                doLogin(id, user, ctx);
-                ctx.body = {
-                    code:200,
-                    content: res
-                };
+            doLogin(id, user, ctx);
+            ctx.body = {
+                code:200,
+                content: res
+            };
         })
         .catch(err => {
             ctx.body = {
@@ -86,36 +86,51 @@ let register = async (ctx, next) => {
         };
     });
 };
-let getLikes = async (ctx, next) => {
+let editUser =  async (ctx, next) => {
     await next();
-    let id = ctx.session.id;
-    console.log(id);
-    await User.findOne({_id:id},{likes:1}).exec()
-        .then(res => {
-            ctx.body = {
-                code: 200,
-                content: res
-            };
-        });
-};
-let Likes = async(ctx, next) =>{
-    await next();
-    let id = ctx.session.id;
-    let likesId = ctx.request.body.id;
-    await User.update({_id: id},{$push: {likes: likesId}}).exec()
-        .then(res => {
-            ctx.body = {
-                code: 200,
-                content: res
-            };
-        });
-};
+    let id = ctx.request.body.id || '';
+    let pass = ctx.request.body.pass || '';
+    await User.update({
+        _id: id,
+    },{
+        passwd: pass,
+    }).exec().then(res => {
+        ctx.body = {
+            code: 200
+        };
+    });
 
-module.exports = {
-    "POST /login": login,
-    "POST /likes": Likes,
-    "GET /getLikes": getLikes,
-    "POST /register": register,
-    "GET /checkRegister" : checkRegister,
-    "GET /checkLogin" : checkLogin
-};
+    let getLikes = async (ctx, next) => {
+        await next();
+        let id = ctx.session.id;
+        console.log(id);
+        await User.findOne({_id:id},{likes:1}).exec()
+            .then(res => {
+                ctx.body = {
+                    code: 200,
+                    content: res
+                };
+            });
+    };
+    let Likes = async(ctx, next) =>{
+        await next();
+        let id = ctx.session.id;
+        let likesId = ctx.request.body.id;
+        await User.update({_id: id},{$push: {likes: likesId}}).exec()
+            .then(res => {
+                ctx.body = {
+                    code: 200,
+                    content: res
+                };
+            });
+    };
+
+    module.exports = {
+        "POST /login": login,
+        "POST /likes": Likes,
+        "GET /getLikes": getLikes,
+        "POST /register": register,
+        "POST /editUser": editUser,
+        "GET /checkRegister" : checkRegister,
+        "GET /checkLogin" : checkLogin
+    };

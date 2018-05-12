@@ -1,7 +1,7 @@
 <template>
   <div>
-      <nav-bar>
-          <div slot="title">Blog</div>
+      <nav-bar title="Blog">
+          <!-- <div slot="title">Blog</div> -->
       </nav-bar>
       <div class="content">
           <ul>

@@ -30,6 +30,7 @@
          margin-right: 15%;
      }
      div.content{
+         position:relative;
          margin-left: 10%;
      }
  }

@@ -1,7 +1,7 @@
 <template>
     <div>
-        <nav-bar @userCheck="setUser">
-            <div slot="title">Upload</div>
+        <nav-bar @userCheck="setUser" title="Upload">
+            <!-- <div slot="title">Upload</div> -->
         </nav-bar>
         <div class="content">
             <div class="menu">

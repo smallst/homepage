@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="navbar">
-            <h1><slot name="title" ></slot></h1>
+            <h1>{{title}}</h1>
             <div class="user" @click="doLogin()">
                 {{user.name?user.name:'sign in'}}
                 <span class="unread" v-if="unread">{{unread}}</span>
@@ -13,13 +13,31 @@
             </div>
         </div>
         <vue-snotify></vue-snotify>
+        <div class="navball" @click="toggleNav()">
+            <div v-if="title !='Gallery'" :class="{detail:detail}"><router-link to="/gallery"><font-awesome-icon icon="images" size="lg"></font-awesome-icon></router-link></div>
+            <div v-if="title !='Blog'" :class="{detail:detail}"><router-link to="/bloglist"><font-awesome-icon icon="file-alt" size="lg"></font-awesome-icon></router-link></div>
+            <div v-if="title !='Story'" :class="{detail:detail}"><router-link to="/storymenu"><font-awesome-icon icon="book" size="lg"></font-awesome-icon></router-link></div>
+            <div v-if="title !='欢迎来到 smallst.me'" :class="{detail:detail}"><router-link to="/">
+                <font-awesome-icon icon="home" size="lg"></font-awesome-icon>
+            </router-link></div>
+        </div>
         <hr class="mysplit-color"/>
     </div>
 </template>
 
 <script>
+ import fontawesome from '@fortawesome/fontawesome';
+ import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
+ import faHome from '@fortawesome/fontawesome-free-solid/faHome';
+ import faCamera from '@fortawesome/fontawesome-free-solid/faCamera';
+ import faImages from '@fortawesome/fontawesome-free-solid/faImages';
+ import faBook from '@fortawesome/fontawesome-free-solid/faBook';
+ import faFileAlt from '@fortawesome/fontawesome-free-solid/faFileAlt';
+
+ fontawesome.library.add(faHome,faCamera, faFileAlt, faBook, faImages);
  export default {
      name: 'NavBar',
+     props: ['title'],
      data () {
          return {
              user: {},
@@ -27,9 +45,13 @@
              passwd: '',
              signin: false,
              unread: 0,
+             detail: false,
          }
      },
      methods:{
+         toggleNav:function(){
+             this.detail = !this.detail;
+         },
          doLogin: function(){
              if(this.user.name == undefined)
                  {
@@ -89,6 +111,9 @@
                  }
              })
          });
+     },
+     components:{
+         FontAwesomeIcon
      }
  }
 </script>
@@ -147,5 +172,49 @@
      align-items: center;
      color: var(--pink);
      background-color: var(--foreground-color);
+ }
+ .navball{
+     position: fixed;
+     bottom: 4vh;
+     right: 4vh;
+     width: 3em;
+     height: 3em;
+     border-radius: 1.5em;
+     background-color: var(--pink);
+     border: 1px solid white;
+ }
+ .navball>div{
+     display:flex;
+     justify-content: center;
+     align-items: center;
+     position: absolute;
+     width: 3em;
+     height: 3em;
+     border-radius: 1.5em;
+     background: white;
+     pointer-events: none;
+     transform-origin: 50%,50%;
+     opacity: 0;
+     transition: transform 0.2s ease-in-out;
+ }
+ .navball>.detail{
+     opacity: 1;
+     pointer-events: auto;
+ }
+ .navball>div.detail:nth-child(1){
+     /* transform: rotate(270deg) translate(10em) rotate(-270deg); */
+     transform: translate(0,-6em);
+ }
+.navball>div.detail:nth-child(2){
+    transform: translate(-4.2em,-4.2em);
+ }
+.navball>div.detail:nth-child(3){
+     transform:  translate(-6em);
+ }
+
+ @media screen and (min-width: 1200px){
+     .navball{
+         right: 22vh;
+     }
  }
 </style>

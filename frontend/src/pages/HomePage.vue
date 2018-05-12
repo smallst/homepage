@@ -1,7 +1,7 @@
 <template>
     <div>
-        <nav-bar>
-            <div slot="title">欢迎来到 smallst.me</div>
+        <nav-bar title="欢迎来到 smallst.me">
+            <!-- <div slot="title">欢迎来到 smallst.me</div> -->
         </nav-bar>
         <div class="content">
             <p>这里可能有：</p>
@@ -50,5 +50,6 @@
      text-align: center;
      color: #999999;
      font-size: 0.9em;
+     z-index: -99;
  }
 </style>

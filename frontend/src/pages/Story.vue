@@ -1,7 +1,7 @@
 <template>
     <div>
-        <nav-bar>
-            <div slot="title">No. {{number}}</div>
+        <nav-bar :title="'No. '+number">
+            <!-- <div slot="title">No. {{number}}</div> -->
         </nav-bar>
         <div class="content">
             <div :class="{day:part=='day', eve:part=='eve'}">

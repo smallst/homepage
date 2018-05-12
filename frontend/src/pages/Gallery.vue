@@ -1,7 +1,7 @@
 <template>
     <div>
-        <nav-bar @userCheck="setUser">
-            <div slot="title">Gallery</div>
+        <nav-bar @userCheck="setUser" title="Gallery">
+            <!-- <div slot="title">Gallery</div> -->
         </nav-bar>
         <div class="mask" :class="{show: mask}" @click="maskClose()">
             <gallery-detail :initPhoto="focusP" :isMobile="colnum==1" :photos="photos" :user="user" v-if="mask" />

@@ -1,7 +1,7 @@
 <template>
     <div>
-        <nav-bar>
-            <div slot="title">Story</div>
+        <nav-bar title="Story">
+            <!-- <div slot="title">Story</div> -->
         </nav-bar>
         <h2>Our story of Black Party</h2>
         <div class="content">

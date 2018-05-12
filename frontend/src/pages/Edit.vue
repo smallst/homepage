@@ -1,7 +1,7 @@
 <template>
     <div>
-        <nav-bar @userCheck="setUser">
-            <div slot="title">Edit</div>
+        <nav-bar @userCheck="setUser" title="Edit">
+            <!-- <div slot="title">Edit</div> -->
         </nav-bar>
         <div class="content">
             <!-- <div class="menu"> -->

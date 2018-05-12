@@ -37,7 +37,7 @@ let readAll = async (ctx, next) => {
         read: false
     }, {
         read: true
-    }).then(res => {
+    },{multi: true}).then(res => {
         ctx.body = {
             code: 200,
         };

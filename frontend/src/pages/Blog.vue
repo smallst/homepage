@@ -1,7 +1,7 @@
 <template>
     <div>
-        <nav-bar v-on:userCheck="setUser">
-            <div slot="title">{{title}}</div>
+        <nav-bar v-on:userCheck="setUser" :title="title">
+            <!-- <div slot="title">{{title}}</div> -->
         </nav-bar>
         <div class="content">
             <div v-if="edit"><router-link  :to="{name:'edit',params:{type:'blog',id:id}}">edit</router-link></div>
