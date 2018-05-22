@@ -52,7 +52,9 @@
      background-image: linear-gradient(to right, transparent, var(--pink) 10%, var(--pink) 90%, transparent 100%);
 
  }
-
+ a, a:visited{
+     color: var(--main-color);
+ }
  input[type="text"], input[type='password']{
      outline: none;
      margin: 0.2em 0.1em;

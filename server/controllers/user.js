@@ -99,38 +99,39 @@ let editUser =  async (ctx, next) => {
             code: 200
         };
     });
+};
 
-    let getLikes = async (ctx, next) => {
-        await next();
-        let id = ctx.session.id;
-        console.log(id);
-        await User.findOne({_id:id},{likes:1}).exec()
-            .then(res => {
-                ctx.body = {
-                    code: 200,
-                    content: res
-                };
-            });
-    };
-    let Likes = async(ctx, next) =>{
-        await next();
-        let id = ctx.session.id;
-        let likesId = ctx.request.body.id;
-        await User.update({_id: id},{$push: {likes: likesId}}).exec()
-            .then(res => {
-                ctx.body = {
-                    code: 200,
-                    content: res
-                };
-            });
-    };
+let getLikes = async (ctx, next) => {
+    await next();
+    let id = ctx.session.id;
+    console.log(id);
+    await User.findOne({_id:id},{likes:1}).exec()
+        .then(res => {
+            ctx.body = {
+                code: 200,
+                content: res
+            };
+        });
+};
+let Likes = async(ctx, next) =>{
+    await next();
+    let id = ctx.session.id;
+    let likesId = ctx.request.body.id;
+    await User.update({_id: id},{$push: {likes: likesId}}).exec()
+        .then(res => {
+            ctx.body = {
+                code: 200,
+                content: res
+            };
+        });
+};
 
-    module.exports = {
-        "POST /login": login,
-        "POST /likes": Likes,
-        "GET /getLikes": getLikes,
-        "POST /register": register,
-        "POST /editUser": editUser,
-        "GET /checkRegister" : checkRegister,
-        "GET /checkLogin" : checkLogin
-    };
+module.exports = {
+    "POST /login": login,
+    "POST /likes": Likes,
+    "GET /getLikes": getLikes,
+    "POST /register": register,
+    "POST /editUser": editUser,
+    "GET /checkRegister" : checkRegister,
+    "GET /checkLogin" : checkLogin
+};

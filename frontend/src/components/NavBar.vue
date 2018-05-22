@@ -17,9 +17,8 @@
             <div v-if="title !='Gallery'" :class="{detail:detail}"><router-link to="/gallery"><font-awesome-icon icon="images" size="lg"></font-awesome-icon></router-link></div>
             <div v-if="title !='Blog'" :class="{detail:detail}"><router-link to="/bloglist"><font-awesome-icon icon="file-alt" size="lg"></font-awesome-icon></router-link></div>
             <div v-if="title !='Story'" :class="{detail:detail}"><router-link to="/storymenu"><font-awesome-icon icon="book" size="lg"></font-awesome-icon></router-link></div>
-            <div v-if="title !='欢迎来到 smallst.me'" :class="{detail:detail}"><router-link to="/">
-                <font-awesome-icon icon="home" size="lg"></font-awesome-icon>
-            </router-link></div>
+            <div v-if="title !='欢迎来到 smallst.me'" :class="{detail:detail}"><router-link to="/"><font-awesome-icon icon="home" size="lg"></font-awesome-icon></router-link></div>
+            <font-awesome-icon :icon="['far','compass']" size="3x" :transform="{rotate: detail?270:0}"></font-awesome-icon>
         </div>
         <hr class="mysplit-color"/>
     </div>
@@ -33,8 +32,9 @@
  import faImages from '@fortawesome/fontawesome-free-solid/faImages';
  import faBook from '@fortawesome/fontawesome-free-solid/faBook';
  import faFileAlt from '@fortawesome/fontawesome-free-solid/faFileAlt';
+ import faCompass from '@fortawesome/fontawesome-free-regular/faCompass';
 
- fontawesome.library.add(faHome,faCamera, faFileAlt, faBook, faImages);
+ fontawesome.library.add(faHome,faCamera, faFileAlt, faBook, faImages, faCompass);
  export default {
      name: 'NavBar',
      props: ['title'],
@@ -179,9 +179,13 @@
      right: 4vh;
      width: 3em;
      height: 3em;
+     display:flex;
+     justify-content:center;
+     align-items:center;
      border-radius: 1.5em;
      background-color: var(--pink);
      border: 1px solid white;
+     z-index: 90; 
  }
  .navball>div{
      display:flex;
@@ -191,7 +195,8 @@
      width: 3em;
      height: 3em;
      border-radius: 1.5em;
-     background: white;
+     border: 1px solid white;
+     background: var(--pink);
      pointer-events: none;
      transform-origin: 50%,50%;
      opacity: 0;

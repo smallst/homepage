@@ -16,7 +16,8 @@
             <br>
             <hr class="mysplit-color"/>
             <div class="introduction">
-                大家好，这里是爱大海的狐狸君的主页，如你所见，我想写博客，写小说，拍照片，而在这一页的第一个社交按钮表明，我是一只程序猿。
+                <p>大家好，这里是爱大海的狐狸君的主页，如你所见，我想写博客，写小说，拍照片，而在这一页的第一个社交按钮表明，我是一只程序猿。</p>
+                <p>我现在{{age}}岁了。</p>
             </div>
         </div>
     </div>
@@ -33,9 +34,16 @@
  fontawesome.library.add(faGithub, faWeibo, faInstagram, faEnvelope);
  export default {
      name: 'Profile',
+     computed:{
+         age: function(){
+             let date = new Date();
+             let a = date.getFullYear() - 1995;
+             return date > new Date(date.getFullYear()+'-05-25') ? a: a-1;
+         }
+     },
      data () {
          return {
-             msg: 'Welcome to Your Vue.js App'
+             msg: 'Welcome to Your Vue.js App',
          }
      },
      components:{
