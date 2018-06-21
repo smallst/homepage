@@ -15,7 +15,8 @@
                 <comment :id="id" :isMobile="isMobile" :type="'gallery'" :user="user"></comment>
             </div>
             <div class="img">
-                <img id="detail-img" :src="url" alt="" />
+                <img id="detail-img" :src="url" v-if="!isMobile" alt="" />
+                <div @click="download(downloadUrl, id+'.jpg')" style="color:white">下载原图</div>
             </div>
         </div>
         <div class="next" :class="{hide:isMobile|| index==photos.length-1 }" @click="getDetail(index+1, $event)">
@@ -43,6 +44,7 @@
              userId: '',
              exif: '',
              url: '',
+             downloadUrl:'',
              index: this.initPhoto.index,
              id: this.initPhoto.id,
              /* comment: '',*/
@@ -54,7 +56,9 @@
          }
      },
      methods:{
-
+         download: function(url, name) {
+             utils.download(url,name);
+         },
          prevent: function($event){
              $event.stopPropagation();
              $event.preventDefault();
@@ -96,10 +100,11 @@
                      {
                          url = that.photos[index].url + '?imageView2/2/h/'+screenY;
                      }
-                 if(!that.isMobile)
-                     {
-                         that.url = url;
-                     }
+                 /* if(!that.isMobile)*/
+                 /* {*/
+                 that.url = url;
+                 that.downloadUrl = "/api/DownloadImage?id="+that.photos[index].id;//that.photos[index].url;
+                 /* }*/
                  that.exif = `${exif[that.exifinfo[0]]}, ${exif[that.exifinfo[1]]},
 ${exif[that.exifinfo[4]]}, ${exif[that.exifinfo[2]]}, ISO ${exif[that.exifinfo[3]]}`;
              });
@@ -202,6 +207,7 @@ ${exif[that.exifinfo[4]]}, ${exif[that.exifinfo[2]]}, ISO ${exif[that.exifinfo[3
 
  .img{
      display:flex;
+     flex-direction: column;
      justify-content:center;
      align-items: center;
  }

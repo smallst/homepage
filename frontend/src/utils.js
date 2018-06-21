@@ -9,6 +9,45 @@ export default{
     get: (path, succ, err=null, final=null)=>{
         axios.get('/api/'+path).then(succ).catch(err).finally(final);
     },
+    download: (path, name)=>{
+        var isSupportDownload = 'download' in document.createElement('a');
+        console.log(path);
+        axios({
+            url: path,
+            method: 'GET',
+            responseType: 'blob', // important
+        }).then(res =>{
+            let jpeg;
+            try{
+                jpeg = new Blob( [res.data], {type : "image/jpeg"});
+            }
+            catch(e){
+                // TypeError old chrome and FF
+                window.BlobBuilder = window.BlobBuilder || 
+                    window.WebKitBlobBuilder || 
+                    window.MozBlobBuilder || 
+                    window.MSBlobBuilder;
+                if(e.name == 'TypeError' && window.BlobBuilder){
+                    var bb = new BlobBuilder();
+                    bb.append(array.buffer);
+                    jpeg = bb.getBlob("image/jpeg");
+                }
+                else if(e.name == "InvalidStateError"){
+                    // InvalidStateError (tested on FF13 WinXP)
+                    jpeg = new Blob( [array.buffer], {type : "image/jpeg"});
+                }
+                else{
+                    // We're screwed, blob constructor unsupported entirely   
+                }
+            }
+            const url = window.URL.createObjectURL(jpeg);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download',name);
+            document.body.appendChild(link);
+            link.click();
+        });
+    },
     setCookie:(cname, cvalue, exdays) =>{
         var d = new Date();
         d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -34,9 +73,9 @@ export default{
         let timerID = -1;
         timerID = setInterval(keepAlive, 30000);
         // ws.onmessage = function(event){
-            // let data = event.data;
+        // let data = event.data;
 
-            // console.log(JSON.parse(data));
+        // console.log(JSON.parse(data));
         // };
         ws.onmessage = onmessage;
         ws.onclose = function(evt){

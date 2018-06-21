@@ -1,4 +1,11 @@
 const Photo = global.model.Photo;
+let getDownload = async(ctx, next)=>{
+    await next();
+    let id = ctx.request.query.id;
+    let res =  await Photo.findOne({_id:id});
+    let request = require("request");
+    ctx.body = await request(res.url);
+};
 let getExif =async (ctx, next) => {
     await next();
     let id = ctx.request.query.id;
@@ -139,4 +146,5 @@ module.exports = {
     "GET /getExif" : getExif,
     "POST /addPhoto"  : addPhoto,
     "GET /getPhotoList" :  getPhotoList,
+    "GET /downloadImage" : getDownload,
 };
