@@ -1,7 +1,6 @@
-* homepage [40%]
-  - [ ] recent activities
-  - [ ] styles
-  - [ ] navigator
+* homepage [75%]
+  - [X] styles
+  - [X] navigator
   - [X] user
   - [X] notification
 ** DONE blog[100%]
@@ -23,6 +22,8 @@
    - [X] list
    - [X] detail
    - [ ] comment
-** TODO profile[50%]
+** DONE profile[100%]
+   CLOSED: [2018-06-26 Tue 11:52]
+   - State "DONE"       from "TODO"       [2018-06-26 Tue 11:52]
    - [X] social
-   - [ ] details
+   - [X] details
