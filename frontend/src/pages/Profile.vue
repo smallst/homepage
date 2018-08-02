@@ -148,6 +148,10 @@
      .bottom .detail{
          display:none;
      }
+     .content{
+     height: 78vh;
+     }
+
      .bottom{
          bottom: 0em;
      }
