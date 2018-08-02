@@ -17,8 +17,9 @@
  import hljs from 'highlight.js'
  require('@/assets/css/katex/katex.min.css');
  require('@/assets/css/highlightjs/monokai.css');
- let markdown = require('markdown-it')();
- let mk = require('@iktakahiro/markdown-it-katex');
+ import markdownIt from 'markdown-it';
+ let markdown = markdownIt();
+ import mk from '@iktakahiro/markdown-it-katex';
 
  markdown.use(mk,{"throwOnError" : false, "errorColor" : " #cc0000"});
 

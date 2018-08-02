@@ -17,7 +17,7 @@
             </div>
             <br>
             <!-- <hr class="mysplit-color"/> -->
-            <div class="introduction">
+            <div class="introduction" @wheel="wheelListener">
                 <p>你好，这里是爱大海的狐狸君的主页。目前这里有博客，小说，照片三大内容。</p>
                 <p>首先我是一只程序猿，这也是我建这个网站的根源。虽然博客已经是过气的东西了，但记录一下有趣的东西也未尝不可。</p>
                 <p>小说呢只是自己的脑洞，文笔不好，内容也大多借鉴自己看过的动漫，更新漫漫无期，不要过多期待。</p>
@@ -60,19 +60,28 @@
              angle: 0,
          }
      },
+     methods:{
+         calcAngle:function(){
+             let a = document.getElementById("arrow").getBoundingClientRect();
+             let b = document.getElementsByClassName("navball")[0].getBoundingClientRect();
+             let p1 = {
+                 x: a.x + a.width/2,
+                 y: a.y + a.height/2
+             };
+             let p2 = {
+                 x: b.x + b.width/2,
+                 y: b.y + b.height/2
+             };
+             console.log("angle:"+Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI)
+             this.angle = Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI;
+         } ,
+         wheelListener:function(event){
+             let that =this;
+             console.log('wheel event')
+                 that.calcAngle();
+         }
+     },
      mounted:function(){
-         let a = document.getElementById("arrow").getBoundingClientRect();
-         let b = document.getElementsByClassName("navball")[0].getBoundingClientRect();
-         let p1 = {
-             x: a.x + a.width/2,
-             y: a.y + a.height/2
-         };
-          let p2 = {
-             x: b.x + b.width/2,
-             y: b.y + b.height/2
-         };
-         console.log("angle:"+Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI)
-         this.angle = Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI;
      },
      components:{
          FontAwesomeIcon,
@@ -109,7 +118,17 @@
      text-indent: 2em;
      margin-right: 10vw;
      margin-top: 5vh;
-     margin-bottom: 5vh;
+     /* margin-bottom: 5vh; */
+     /* padding-bottom: 10vh; */
+ }
+ .content{
+     margin-bottom: 8vh;
+     height: 70vh;
+     overflow-y: scroll;
+ }
+ .content::-webkit-scrollbar{
+     position: absolute;
+     opacity: 0.2;
  }
  .bottom{
      position:fixed;
@@ -117,7 +136,7 @@
      right: 0;
      margin-left: auto;
      margin-right: auto;
-     bottom: 2em;
+     bottom: 1em;
      width: 80%;
      text-align: center;
      color: #999999;

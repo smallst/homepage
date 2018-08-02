@@ -1,15 +1,24 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import HomePage from '@/pages/HomePage';
-import User from '@/pages/User';
-import Gallery from '@/pages/Gallery';
-import BlogList from '@/pages/BlogList';
-import Blog from '@/pages/Blog';
-import StoryMenu from '@/pages/StoryMenu';
-import Story from '@/pages/Story';
-import Profile from '@/pages/Profile';
-import Upload from '@/pages/Upload';
-import Edit from '@/pages/Edit';
+// import HomePage from '@/pages/HomePage';
+// import User from '@/pages/User';
+// import Gallery from '@/pages/Gallery';
+// import BlogList from '@/pages/BlogList';
+// import Blog from '@/pages/Blog';
+// import StoryMenu from '@/pages/StoryMenu';
+// import Story from '@/pages/Story';
+// import Profile from '@/pages/Profile';
+// import Upload from '@/pages/Upload';
+// import Edit from '@/pages/Edit';
+const User = ()=>import("@/pages/User");
+const Gallery = ()=>import("@/pages/Gallery");
+const BlogList = ()=>import("@/pages/BlogList");
+const Blog = ()=>import('@/pages/Blog');
+const StoryMenu = ()=>import("@/pages/StoryMenu");
+const Story = ()=>import("@/pages/Story");
+const Profile = ()=>import("@/pages/Profile");
+const Upload = ()=>import(/*webpackChunkName: 'group-auth'*/'@/pages/Upload');
+const Edit = ()=>import(/*webpackChunkName: 'group-auth'*/'@/pages/Edit');
 
 Vue.use(Router);
 
