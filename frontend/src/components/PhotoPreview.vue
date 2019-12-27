@@ -6,11 +6,6 @@
 </template>
 
 <script>
- import fontawesome from '@fortawesome/fontawesome';
- import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
- import faCheck from '@fortawesome/fontawesome-free-solid/faCheck';
-
- fontawesome.library.add(faCheck);
 
 export default {
      name: 'PhotoPreview',
@@ -24,9 +19,6 @@ export default {
          console.log('finish:');
          console.log(this.finish);
      },
-     components:{
-         FontAwesomeIcon,
-     }
 }
 </script>
 

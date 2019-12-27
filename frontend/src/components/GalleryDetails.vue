@@ -27,15 +27,7 @@
 
 <script>
  import Comment from '@/components/Comment';
- import fontawesome from '@fortawesome/fontawesome';
- import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
- /* import faReply from '@fortawesome/fontawesome-free-solid/faReply';*/
- import faArrowLeft from '@fortawesome/fontawesome-free-solid/faAngleLeft';
- import faArrowRight from '@fortawesome/fontawesome-free-solid/faAngleRight';
- import faHeart from '@fortawesome/fontawesome-free-regular/faHeart';
- import faHeartO from '@fortawesome/fontawesome-free-solid/faHeart';
 
- fontawesome.library.add(faArrowLeft, faArrowRight, faHeart, faHeartO);
  export default {
      name: 'GalleryDetails',
      props: ['initPhoto', 'isMobile', 'photos', 'user'],
@@ -134,7 +126,6 @@ ${exif[that.exifinfo[4]]}, ${exif[that.exifinfo[2]]}, ISO ${exif[that.exifinfo[3
              }
      },
      components:{
-         FontAwesomeIcon,
          "comment":Comment,
      }
  }

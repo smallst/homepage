@@ -35,16 +35,8 @@
 </template>
 
 <script>
- import fontawesome from '@fortawesome/fontawesome';
- import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
- import faGithub from '@fortawesome/fontawesome-free-brands/faGithub';
- import faWeibo from '@fortawesome/fontawesome-free-brands/faWeibo';
- import faInstagram from '@fortawesome/fontawesome-free-brands/faInstagram';
- import faEnvelope from '@fortawesome/fontawesome-free-regular/faEnvelope';
- import faArrowRight from '@fortawesome/fontawesome-free-solid/faArrowRight';
  import NavBar from '@/components/NavBar';
 
- fontawesome.library.add(faGithub, faWeibo, faInstagram, faEnvelope, faArrowRight);
  export default {
      name: 'Profile',
      computed:{
@@ -84,7 +76,6 @@
      mounted:function(){
      },
      components:{
-         FontAwesomeIcon,
          NavBar
      }
  }

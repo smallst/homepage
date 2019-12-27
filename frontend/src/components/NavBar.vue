@@ -25,16 +25,7 @@
 </template>
 
 <script>
- import fontawesome from '@fortawesome/fontawesome';
- import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
- import faHome from '@fortawesome/fontawesome-free-solid/faHome';
- import faCamera from '@fortawesome/fontawesome-free-solid/faCamera';
- import faImages from '@fortawesome/fontawesome-free-solid/faImages';
- import faBook from '@fortawesome/fontawesome-free-solid/faBook';
- import faFileAlt from '@fortawesome/fontawesome-free-solid/faFileAlt';
- import faCompass from '@fortawesome/fontawesome-free-regular/faCompass';
 
- fontawesome.library.add(faHome,faCamera, faFileAlt, faBook, faImages, faCompass);
  export default {
      name: 'NavBar',
      props: ['title'],
@@ -112,9 +103,6 @@
              })
          });
      },
-     components:{
-         FontAwesomeIcon
-     }
  }
 </script>
 

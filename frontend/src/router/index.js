@@ -1,36 +1,26 @@
-import Vue from 'vue';
-import Router from 'vue-router';
-// import HomePage from '@/pages/HomePage';
-// import User from '@/pages/User';
-// import Gallery from '@/pages/Gallery';
-// import BlogList from '@/pages/BlogList';
-// import Blog from '@/pages/Blog';
-// import StoryMenu from '@/pages/StoryMenu';
-// import Story from '@/pages/Story';
-// import Profile from '@/pages/Profile';
-// import Upload from '@/pages/Upload';
-// import Edit from '@/pages/Edit';
-const User = ()=>import("@/pages/User");
-const Gallery = ()=>import("@/pages/Gallery");
-const BlogList = ()=>import("@/pages/BlogList");
-const Blog = ()=>import('@/pages/Blog');
-const StoryMenu = ()=>import("@/pages/StoryMenu");
-const Story = ()=>import("@/pages/Story");
-const Profile = ()=>import("@/pages/Profile");
-const Upload = ()=>import(/*webpackChunkName: 'group-auth'*/'@/pages/Upload');
-const Edit = ()=>import(/*webpackChunkName: 'group-auth'*/'@/pages/Edit');
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+import Home from '../views/Home.vue'
 
-Vue.use(Router);
+const User = ()=>import("@/views/User");
+const Gallery = ()=>import("@/views/Gallery");
+const BlogList = ()=>import("@/views/BlogList");
+const Blog = ()=>import('@/views/Blog');
+const StoryMenu = ()=>import("@/views/StoryMenu");
+const Story = ()=>import("@/views/Story");
+const Profile = ()=>import("@/views/Profile");
+const Upload = ()=>import(/*webpackChunkName: 'group-auth'*/'@/views/Upload');
+const Edit = ()=>import(/*webpackChunkName: 'group-auth'*/'@/views/Edit');
 
-export default new Router({
-    // mode: 'history',
-    routes: [
-        {
-            path: '/',
-            name: 'homepage',
-            // component: HomePage
-            component: Profile
-        },
+
+Vue.use(VueRouter)
+
+const routes = [
+  {
+    path: '/',
+    name: 'homepage',
+    component: Profile
+  },
         {
             path:'/user/:initInfo',
             name: 'user',
@@ -82,5 +72,10 @@ export default new Router({
             props: true,
             component: Edit
         }
-    ]
-});
+]
+
+const router = new VueRouter({
+  routes
+})
+
+export default router

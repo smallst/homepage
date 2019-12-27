@@ -26,11 +26,6 @@
 
 <script>
 
- import fontawesome from '@fortawesome/fontawesome';
- import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
- import faReply from '@fortawesome/fontawesome-free-solid/faReply';
-
- fontawesome.library.add(faReply);
  export default {
      name: 'Comment',
      props:['user', 'id', 'isMobile', 'type'],
@@ -98,9 +93,6 @@
                  }
          });
      },
-     components:{
-         FontAwesomeIcon
-     }
  }
 </script>
 
