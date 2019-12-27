@@ -15,7 +15,7 @@
             </ul>
         </div>
         <div class="bottom">
-            这个网站使用 <a href="https://vuejs.org/">Vue.js</a> 与 <a href="https://github.com/axios/axios">axios</a> 构建，使用了 <a href="https://fontawesome.com/">Font Awesome</a>，其他皆为手撸。后端采用 <a href="https://nodejs.org/en/">nodejs</a> 配合<a href="https://www.mongodb.com/">MongoDb</a> 搭建，欢迎到 <a href="https://github.com/smallst/homepage/issues">Github</a> 提交 bug ，以帮助该网站越做越好。<br>注册仅提供评论功能，请自行选择。
+            这个网站使用 <a href="https://vuejs.org/">Vue.js</a> 与 <a href="https://github.com/axios/axios">axios</a> 构建，使用了 <a href="https://fontawesome.com/">Font Awesome</a>，其他皆为手撸。后端采用 <a href="https://nodejs.org/en/">nodejs</a> 配合<a href="https://www.mongodb.com/">MongoDb</a> 搭建，欢迎到 <a href="https://github.com/smallst/homepage/issues">Github</a> 提交 bug ，以帮助该网站越做越好。<br>注册仅提供评论功能，请自行选择。京ICP备19059535号。
         </div>
     </div>
 </template>
