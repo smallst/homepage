@@ -24,7 +24,7 @@
     "@fortawesome/fontawesome-free": "^5.12.0",
     "@vue/cli-plugin-babel": "^4.1.0",
     "@vue/cli-service": "^4.1.0",
-    "markdown-it": "^10.0.0",
+    "markdown-it": "^12.3.2",
     "vue-template-compiler": "^2.6.10"
   }
 }
